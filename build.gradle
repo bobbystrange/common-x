@@ -1,0 +1,13 @@
+ext {
+    javamailVersion = "1.6.2"
+    compressVersion = "1.18"
+}
+
+dependencies {
+    compile "javax.mail:javax.mail-api:$javamailVersion"
+
+    // project
+    compile 'com.tukeof.common:common-core:0.2.0'
+    compile "org.apache.commons:commons-compress:$compressVersion"
+
+}
