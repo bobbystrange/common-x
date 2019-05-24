@@ -1,6 +1,6 @@
-package com.tukeof.common.x.mail;
+package org.dreamcat.common.x.mail;
 
-import com.tukeof.common.util.ObjectUtil;
+import org.dreamcat.common.util.ObjectUtil;
 import lombok.Data;
 
 import javax.mail.internet.AddressException;

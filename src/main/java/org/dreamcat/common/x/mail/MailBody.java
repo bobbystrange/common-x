@@ -1,4 +1,4 @@
-package com.tukeof.common.x.mail;
+package org.dreamcat.common.x.mail;
 
 import lombok.Data;
 

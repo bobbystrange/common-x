@@ -4,10 +4,9 @@ ext {
 }
 
 dependencies {
-    compile "javax.mail:javax.mail-api:$javamailVersion"
+    implementation "javax.mail:javax.mail-api:$javamailVersion"
 
     // project
-    compile 'com.tukeof.common:common-core:0.2.0'
-    compile "org.apache.commons:commons-compress:$compressVersion"
-
+    implementation ('org.dreamcat:common-core:0.0.1') { changing = true }
+    implementation "org.apache.commons:commons-compress:$compressVersion"
 }

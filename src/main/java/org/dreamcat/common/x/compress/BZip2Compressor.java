@@ -1,4 +1,4 @@
-package com.tukeof.common.x.compress;
+package org.dreamcat.common.x.compress;
 
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;

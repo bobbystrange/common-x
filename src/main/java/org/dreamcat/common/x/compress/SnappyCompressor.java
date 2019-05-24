@@ -1,10 +1,10 @@
-package com.tukeof.common.x.compress;
+package org.dreamcat.common.x.compress;
 
+import org.dreamcat.common.exception.NotImplementedException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
 import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStream;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,7 +81,7 @@ public class SnappyCompressor implements Compressor {
 
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
-        throw new  NotImplementedException();
+        throw new NotImplementedException();
     }
 
     @Override

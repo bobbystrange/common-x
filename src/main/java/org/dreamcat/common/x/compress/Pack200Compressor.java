@@ -1,23 +1,24 @@
-package com.tukeof.common.x.compress;
+package org.dreamcat.common.x.compress;
 
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
+import org.apache.commons.compress.compressors.pack200.Pack200CompressorInputStream;
+import org.apache.commons.compress.compressors.pack200.Pack200CompressorOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class XZCompressor implements Compressor {
+public class Pack200Compressor implements Compressor {
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
-        return new XZCompressorOutputStream(outs);
+        return new Pack200CompressorOutputStream(outs);
     }
 
     @Override
     public CompressorInputStream buildCompressorInputStream(InputStream ins) throws IOException {
-        return new XZCompressorInputStream(ins);
+        return new Pack200CompressorInputStream(ins);
     }
 
     @Override
@@ -25,5 +26,5 @@ public class XZCompressor implements Compressor {
         return suffixName;
     }
 
-    private static final String suffixName = "xz";
+    private static final String suffixName = "pack200";
 }

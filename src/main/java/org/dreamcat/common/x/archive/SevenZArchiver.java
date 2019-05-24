@@ -1,4 +1,4 @@
-package com.tukeof.common.x.archive;
+package org.dreamcat.common.x.archive;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static com.tukeof.common.x.archive.Archiver.recurseMkDir;
+import static org.dreamcat.common.x.archive.Archiver.recurseMkDir;
 
 public class SevenZArchiver {
     private static final int BUFFER_SIZE = 4096;

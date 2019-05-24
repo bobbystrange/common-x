@@ -1,20 +1,20 @@
-package com.tukeof.common.x.archive;
+package org.dreamcat.common.x.archive;
 
+import org.dreamcat.common.exception.NotImplementedException;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
-import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.compress.archivers.dump.DumpArchiveInputStream;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 // only unarchive is support
-public class ArjArchiver implements Archiver {
+public class DumpArchiver implements Archiver {
     @Override
     public ArchiveInputStream buildArchiveInputStream(InputStream ins) throws ArchiveException {
-        return new ArjArchiveInputStream(ins);
+        return new DumpArchiveInputStream(ins);
     }
 
     @Override
@@ -26,5 +26,4 @@ public class ArjArchiver implements Archiver {
     public ArchiveEntry buildArchiveEntry(String name, long size) {
         throw new NotImplementedException();
     }
-
 }
