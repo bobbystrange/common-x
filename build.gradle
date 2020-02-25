@@ -9,4 +9,7 @@ dependencies {
     // project
     implementation ('org.dreamcat:common-core:0.0.1') { changing = true }
     implementation "org.apache.commons:commons-compress:$compressVersion"
+
+    testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
+    testImplementation "junit:junit:$junitVersion"
 }

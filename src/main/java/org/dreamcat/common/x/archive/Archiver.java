@@ -4,6 +4,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
+import org.dreamcat.common.io.FileUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,7 +30,7 @@ public interface Archiver {
         ArchiveEntry entry;
         while ((entry = ins.getNextEntry()) != null) {
             File dirFile = new File(destFile.getPath() + File.separator + entry.getName());
-            recurseMkDir(dirFile);
+            FileUtil.mkdir(dirFile);
 
             if (entry.isDirectory()) {
                 dirFile.mkdirs();
@@ -43,7 +44,7 @@ public interface Archiver {
         try (BufferedOutputStream bos = new BufferedOutputStream(
                 new FileOutputStream(destFile))) {
             int count;
-            byte data[] = new byte[BUFFER_SIZE];
+            byte[] data = new byte[BUFFER_SIZE];
             while ((count = ins.read(data, 0, BUFFER_SIZE)) != -1) {
                 bos.write(data, 0, count);
             }
@@ -109,12 +110,4 @@ public interface Archiver {
 
     ArchiveEntry buildArchiveEntry(String name, long size);
 
-    static void recurseMkDir(File file) {
-        File parent = file.getParentFile();
-        if (!parent.getParentFile().exists()) {
-            recurseMkDir(parent);
-        }
-
-        parent.mkdir();
-    }
 }

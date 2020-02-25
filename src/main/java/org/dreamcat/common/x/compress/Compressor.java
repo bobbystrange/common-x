@@ -30,7 +30,7 @@ public interface Compressor {
     default void compress(InputStream ins, OutputStream outs) throws IOException {
         try (CompressorOutputStream cos = buildCompressorOutputStream(outs)) {
             int count;
-            byte data[] = new byte[BUFFER_SIZE];
+            byte[] data = new byte[BUFFER_SIZE];
             while ((count = ins.read(data)) != -1) {
                 cos.write(data, 0, count);
             }
@@ -65,7 +65,7 @@ public interface Compressor {
     default void decompress(InputStream ins, OutputStream outs) throws IOException {
         try (CompressorInputStream cis = buildCompressorInputStream(ins)) {
             int count;
-            byte data[] = new byte[BUFFER_SIZE];
+            byte[] data = new byte[BUFFER_SIZE];
             while ((count = cis.read(data)) != -1) {
                 outs.write(data, 0, count);
             }
@@ -111,7 +111,7 @@ public interface Compressor {
         default void compress(InputStream ins, OutputStream outs, T level) throws IOException {
             try (CompressorOutputStream cos = buildCompressorOutputStream(outs, level)) {
                 int count;
-                byte data[] = new byte[BUFFER_SIZE];
+                byte[] data = new byte[BUFFER_SIZE];
                 while ((count = ins.read(data)) != -1) {
                     cos.write(data, 0, count);
                 }
@@ -129,7 +129,5 @@ public interface Compressor {
         CompressorOutputStream buildCompressorOutputStream(OutputStream outs, T level) throws IOException;
 
     }
-
-
 
 }

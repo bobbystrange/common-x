@@ -4,6 +4,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
+import org.dreamcat.common.io.FileUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -11,8 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import static org.dreamcat.common.x.archive.Archiver.recurseMkDir;
 
 public class SevenZArchiver {
     private static final int BUFFER_SIZE = 4096;
@@ -83,7 +82,7 @@ public class SevenZArchiver {
         SevenZArchiveEntry entry;
         while ((entry = ins.getNextEntry()) != null) {
             File dirFile = new File(destFile.getPath() + File.separator + entry.getName());
-            recurseMkDir(dirFile);
+            FileUtil.mkdir(dirFile);
 
             if (entry.isDirectory()) {
                 dirFile.mkdirs();
@@ -97,7 +96,7 @@ public class SevenZArchiver {
         try (BufferedOutputStream bos = new BufferedOutputStream(
                 new FileOutputStream(destFile))) {
             int count;
-            byte data[] = new byte[BUFFER_SIZE];
+            byte[] data = new byte[BUFFER_SIZE];
             while ((count = ins.read(data, 0, BUFFER_SIZE)) != -1) {
                 bos.write(data, 0, count);
             }
