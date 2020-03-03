@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class XZCompressor implements Compressor {
+    private static final String suffixName = "xz";
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
         return new XZCompressorOutputStream(outs);
@@ -24,6 +26,4 @@ public class XZCompressor implements Compressor {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "xz";
 }

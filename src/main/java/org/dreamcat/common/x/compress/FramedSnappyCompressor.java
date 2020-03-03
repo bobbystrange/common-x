@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FramedSnappyCompressor implements Compressor {
+    private static final String suffixName = "snappy";
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
         return new FramedSnappyCompressorOutputStream(outs);
@@ -24,6 +26,4 @@ public class FramedSnappyCompressor implements Compressor {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "snappy";
 }

@@ -11,14 +11,16 @@ import java.io.OutputStream;
 
 public class BZip2Compressor implements Compressor.LevelCompressor<Integer> {
 
+    private static final String suffixName = "bz2";
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
     // MAX_BLOCKSIZE = 9
     @Override
     public CompressorOutputStream buildCompressorOutputStream(
             OutputStream outs, Integer blockSize) throws IOException {
         return new BZip2CompressorOutputStream(outs, blockSize);
     }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
@@ -34,6 +36,4 @@ public class BZip2Compressor implements Compressor.LevelCompressor<Integer> {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "bz2";
 }

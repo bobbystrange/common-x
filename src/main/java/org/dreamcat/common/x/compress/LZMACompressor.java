@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class LZMACompressor implements Compressor {
+    private static final String suffixName = "lzma";
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
         return new LZMACompressorOutputStream(outs);
@@ -24,6 +26,4 @@ public class LZMACompressor implements Compressor {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "lzma";
 }

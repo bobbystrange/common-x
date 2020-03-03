@@ -12,15 +12,18 @@ import java.io.OutputStream;
 
 public class DeflateCompressor implements Compressor.LevelCompressor<Integer> {
 
+    private static final String suffixName = "z";
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
     // Deflater.DEFAULT_COMPRESSION = -1
-    @Override public CompressorOutputStream buildCompressorOutputStream(
+    @Override
+    public CompressorOutputStream buildCompressorOutputStream(
             OutputStream outs, Integer level) throws IOException {
         DeflateParameters parameters = new DeflateParameters();
         parameters.setCompressionLevel(level);
         return new DeflateCompressorOutputStream(outs, parameters);
     }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
@@ -36,6 +39,4 @@ public class DeflateCompressor implements Compressor.LevelCompressor<Integer> {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "z";
 }

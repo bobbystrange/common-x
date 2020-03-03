@@ -12,6 +12,10 @@ import java.io.OutputStream;
 public class FramedLZ4Compressor implements
         Compressor.LevelCompressor<FramedLZ4CompressorOutputStream.BlockSize> {
 
+    private static final String suffixName = "lz4";
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
     // BlockSize.M4
     @Override
     public CompressorOutputStream buildCompressorOutputStream(
@@ -20,8 +24,6 @@ public class FramedLZ4Compressor implements
                 new FramedLZ4CompressorOutputStream.Parameters(blockSize);
         return new FramedLZ4CompressorOutputStream(outs, params);
     }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
@@ -37,6 +39,4 @@ public class FramedLZ4Compressor implements
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "lz4";
 }

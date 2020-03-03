@@ -12,6 +12,10 @@ import java.io.OutputStream;
 
 public class GzipCompressor implements Compressor.LevelCompressor<Integer> {
 
+    private static final String suffixName = "gz";
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(
             OutputStream outs, Integer level) throws IOException {
@@ -19,8 +23,6 @@ public class GzipCompressor implements Compressor.LevelCompressor<Integer> {
         parameters.setCompressionLevel(level);
         return new GzipCompressorOutputStream(outs, parameters);
     }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
@@ -36,7 +38,5 @@ public class GzipCompressor implements Compressor.LevelCompressor<Integer> {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "gz";
 
 }

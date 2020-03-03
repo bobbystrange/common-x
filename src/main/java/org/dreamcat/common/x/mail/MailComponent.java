@@ -1,7 +1,7 @@
 package org.dreamcat.common.x.mail;
 
-import org.dreamcat.common.util.ObjectUtil;
 import lombok.AllArgsConstructor;
+import org.dreamcat.common.util.ObjectUtil;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;

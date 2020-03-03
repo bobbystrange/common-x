@@ -11,6 +11,8 @@ import java.io.OutputStream;
 
 public class BlockLZ4Compressor implements Compressor {
 
+    private static final String suffixName = "lz4";
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
         return new BlockLZ4CompressorOutputStream(outs);
@@ -25,6 +27,4 @@ public class BlockLZ4Compressor implements Compressor {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "lz4";
 }

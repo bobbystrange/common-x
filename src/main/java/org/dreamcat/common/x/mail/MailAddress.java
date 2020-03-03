@@ -1,7 +1,7 @@
 package org.dreamcat.common.x.mail;
 
-import org.dreamcat.common.util.ObjectUtil;
 import lombok.Data;
+import org.dreamcat.common.util.ObjectUtil;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;

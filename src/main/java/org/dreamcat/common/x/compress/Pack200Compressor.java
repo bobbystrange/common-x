@@ -11,6 +11,8 @@ import java.io.OutputStream;
 
 public class Pack200Compressor implements Compressor {
 
+    private static final String suffixName = "pack200";
+
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
         return new Pack200CompressorOutputStream(outs);
@@ -25,6 +27,4 @@ public class Pack200Compressor implements Compressor {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "pack200";
 }

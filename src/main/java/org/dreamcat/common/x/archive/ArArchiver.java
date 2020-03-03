@@ -11,7 +11,7 @@ import org.apache.commons.compress.archivers.arj.ArjArchiveInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ArArchiver implements Archiver{
+public class ArArchiver implements Archiver {
     @Override
     public ArchiveInputStream buildArchiveInputStream(InputStream ins) throws ArchiveException {
         return new ArjArchiveInputStream(ins);

@@ -1,10 +1,10 @@
 package org.dreamcat.common.x.compress;
 
-import org.dreamcat.common.exception.NotImplementedException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
 import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStream;
+import org.dreamcat.common.exception.NotImplementedException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class SnappyCompressor implements Compressor {
+
+    private static final String suffixName = "snappy";
 
     // SnappyCompressorInputStream.DEFAULT_BLOCK_SIZE = 32 * 1024
     @Override
@@ -69,6 +71,8 @@ public class SnappyCompressor implements Compressor {
         }
     }
 
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
     public void compress(File srcFile, File destFile, int blockSize) throws IOException {
         try (FileInputStream fis = new FileInputStream(srcFile)) {
             try (FileOutputStream fos = new FileOutputStream(destFile)) {
@@ -76,8 +80,6 @@ public class SnappyCompressor implements Compressor {
             }
         }
     }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     @Override
     public CompressorOutputStream buildCompressorOutputStream(OutputStream outs) throws IOException {
@@ -93,7 +95,5 @@ public class SnappyCompressor implements Compressor {
     public String suffixName() {
         return suffixName;
     }
-
-    private static final String suffixName = "snappy";
 
 }
