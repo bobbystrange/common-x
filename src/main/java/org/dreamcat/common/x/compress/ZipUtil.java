@@ -8,7 +8,6 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.dreamcat.common.io.FileUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -94,16 +93,18 @@ public class ZipUtil {
     public static void unarchive(File destFile, ArchiveInputStream ins) throws IOException {
         ArchiveEntry entry;
         while ((entry = ins.getNextEntry()) != null) {
-            File dirFile = new File(destFile.getPath() + File.separator + entry.getName());
-            FileUtil.mkdirsForFile(dirFile);
-
+            File file = new File(destFile.getPath() + File.separator + entry.getName());
+            File parentFile = file.getParentFile();
             if (entry.isDirectory()) {
-                if (!dirFile.mkdirs() && !dirFile.exists()) {
-                    log.error("Failed to mkdir {}", dirFile);
+                if (!file.mkdirs() && !file.exists()) {
+                    log.error("Failed to mkdir {}", file);
                 }
             } else {
-                FileUtil.mkdirsForFile(dirFile);
-                unarchiveFile(dirFile, ins);
+                if (!parentFile.mkdirs() && !parentFile.exists()) {
+                    log.error("Failed to mkdir {}", parentFile);
+                    return;
+                }
+                unarchiveFile(file, ins);
             }
         }
     }
