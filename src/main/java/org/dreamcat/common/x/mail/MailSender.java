@@ -2,6 +2,7 @@ package org.dreamcat.common.x.mail;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.dreamcat.common.util.ObjectUtil;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -27,16 +28,17 @@ import java.util.Properties;
 /**
  * Create by tuke on 2019-01-27
  */
-@Getter
 @AllArgsConstructor
 public class MailSender {
     private static final String DEFAULT_BYTES_TYPE = "application/octet-stream";
 
+    @Getter
     private final Properties properties;
-    private transient String username;
-    private transient String password;
+    private final String host;
+    private final String username;
+    private final String password;
 
-    public MailSender(String username, String password, boolean debug) {
+    public MailSender(String host, String username, String password, boolean debug) {
         this.properties = new Properties();
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
@@ -46,197 +48,165 @@ public class MailSender {
         // smtp port
         properties.put("mail.port", 465);
 
+        this.host = host;
         this.username = username;
         this.password = password;
     }
 
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
-
-    private static Address toAddress(String address) {
-        try {
-            return new InternetAddress(address);
-        } catch (AddressException e) {
-            throw new IllegalArgumentException(e);
-        }
+    private static Address toAddress(String address) throws AddressException {
+        return new InternetAddress(address);
     }
 
     // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
-    private static Address[] toAddresses(String... addresses) {
+    private static Address[] toAddresses(String... addresses) throws AddressException {
         int length = addresses.length;
         Address[] a = new Address[length];
         for (int i = 0; i < length; i++) {
-            try {
-                a[i] = new InternetAddress(addresses[i]);
-            } catch (AddressException e) {
-                throw new IllegalArgumentException(e);
-            }
+            a[i] = new InternetAddress(addresses[i]);
         }
         return a;
     }
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     public Op newOp() {
         return new Op(this);
     }
 
     public static class Op {
-        private Session session;
-        private MimeMessage message;
+        private final MailSender sender;
+        private final Session session;
+        private final MimeMessage message;
         private Multipart multipart;
-        private transient String username;
-        private transient String password;
 
-        private Op(MailSender mailSender) {
-            Properties properties = mailSender.getProperties();
-            this.session = Session.getInstance(properties);
+        private Op(MailSender sender) {
+            this.sender = sender;
+            this.session = Session.getInstance(sender.properties);
             this.message = new MimeMessage(session);
-            this.username = mailSender.getUsername();
-            this.password = mailSender.getPassword();
         }
 
-        public Op from(String from) {
-            try {
-                message.setFrom(toAddress(from));
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
-            }
+        public Op from(String from) throws MessagingException {
+            message.setFrom(toAddress(from));
+
             return this;
         }
 
-        public Op to(String... to) {
-            try {
+        public Op to(String... to) throws MessagingException {
+            if (ObjectUtil.isNotEmpty(to)) {
                 message.setRecipients(Message.RecipientType.TO, toAddresses(to));
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
             }
+
             return this;
         }
 
-        public Op to(List<String> to) {
+        public Op to(List<String> to) throws MessagingException {
             return to(to.toArray(new String[0]));
         }
 
-        public Op cc(String... carbonCopy) {
-            try {
+        public Op cc(String... carbonCopy) throws MessagingException {
+            if (ObjectUtil.isNotEmpty(carbonCopy)) {
                 message.setRecipients(Message.RecipientType.CC, toAddresses(carbonCopy));
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
             }
+
             return this;
         }
 
-        public Op cc(List<String> carbonCopy) {
+        public Op cc(List<String> carbonCopy) throws MessagingException {
             return cc(carbonCopy.toArray(new String[0]));
         }
 
-        public Op bcc(String... blindCarbonCopy) {
-            try {
+        public Op bcc(String... blindCarbonCopy) throws MessagingException {
+            if (ObjectUtil.isNotEmpty(blindCarbonCopy)) {
                 message.setRecipients(Message.RecipientType.BCC, toAddresses(blindCarbonCopy));
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
             }
+
             return this;
         }
 
-        public Op bcc(List<String> blindCarbonCopy) {
+        public Op bcc(List<String> blindCarbonCopy) throws MessagingException {
             return bcc(blindCarbonCopy.toArray(new String[0]));
         }
 
-        public Op replyTo(String... replyTo) {
-            try {
+        public Op replyTo(String... replyTo) throws MessagingException {
+            if (ObjectUtil.isNotEmpty(replyTo)) {
                 message.setReplyTo(toAddresses(replyTo));
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
             }
+
             return this;
         }
 
-        public Op replyTo(List<String> replyTo) {
+        public Op replyTo(List<String> replyTo) throws MessagingException {
             return replyTo(replyTo.toArray(new String[0]));
         }
 
-        public Op subject(String subject) {
-            try {
-                message.setSubject(subject);
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
-            }
+        public Op subject(String subject) throws MessagingException {
+            message.setSubject(subject);
+
             return this;
         }
 
-        public Op content(String content) {
+        public Op content(String content) throws MessagingException {
             return content(content, true);
         }
 
-        public Op content(String content, boolean html) {
-            try {
-                message.setText(content, "uft-8",
-                        html ? "html" : "plain");
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
-            }
+        public Op content(String content, boolean html) throws MessagingException {
+            message.setText(content, "utf-8", html ? "html" : "plain");
+
             return this;
         }
 
-        public Op fileAttachments(Map<String, File> fileAttachments) {
+        public Op fileAttachments(Map<String, File> fileAttachments) throws MessagingException {
             for (String attachmentFileName : fileAttachments.keySet()) {
                 File file = fileAttachments.get(attachmentFileName);
                 fileAttachment(attachmentFileName, file);
             }
+
             return this;
         }
 
-        public Op fileAttachment(String filename, File file) {
-            try {
-                BodyPart attachmentPart = new MimeBodyPart();
-                DataSource source = new FileDataSource(file);
-                attachmentPart.setDataHandler(new DataHandler(source));
-                attachmentPart.setFileName(filename);
+        public Op fileAttachment(String filename, File file) throws MessagingException {
+            BodyPart attachmentPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(file);
+            attachmentPart.setDataHandler(new DataHandler(source));
+            attachmentPart.setFileName(filename);
 
-                if (multipart == null) multipart = new MimeMultipart();
-                multipart.addBodyPart(attachmentPart);
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
-            }
+            if (multipart == null) multipart = new MimeMultipart();
+            multipart.addBodyPart(attachmentPart);
+
             return this;
         }
 
-        public Op bytesAttachments(Map<String, byte[]> bytesAttachments, String mimeType) {
+        public Op bytesAttachments(Map<String, byte[]> bytesAttachments, String mimeType) throws MessagingException {
             for (String attachmentFileName : bytesAttachments.keySet()) {
                 byte[] bytes = bytesAttachments.get(attachmentFileName);
                 bytesAttachment(attachmentFileName, bytes, mimeType);
             }
+
             return this;
         }
 
-        public Op bytesAttachment(String filename, byte[] bytes, String mimeType) {
-            try {
-                if (mimeType == null) mimeType = DEFAULT_BYTES_TYPE;
+        public Op bytesAttachment(String filename, byte[] bytes, String mimeType) throws MessagingException {
+            if (mimeType == null) mimeType = DEFAULT_BYTES_TYPE;
 
-                BodyPart attachmentPart = new MimeBodyPart();
-                DataSource source = new ByteArrayDataSource(bytes, mimeType);
-                attachmentPart.setDataHandler(new DataHandler(source));
-                attachmentPart.setFileName(filename);
+            BodyPart attachmentPart = new MimeBodyPart();
+            DataSource source = new ByteArrayDataSource(bytes, mimeType);
+            attachmentPart.setDataHandler(new DataHandler(source));
+            attachmentPart.setFileName(filename);
 
-                if (multipart == null) multipart = new MimeMultipart();
-                multipart.addBodyPart(attachmentPart);
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
-            }
+            if (multipart == null) multipart = new MimeMultipart();
+            multipart.addBodyPart(attachmentPart);
+
             return this;
         }
 
-        public void send() {
-            try {
-                message.saveChanges();
-                try (Transport transport = session.getTransport()) {
-                    transport.connect(username, password);
-                    transport.sendMessage(message, message.getAllRecipients());
-                }
-            } catch (MessagingException e) {
-                throw new IllegalArgumentException(e);
+        public void send() throws MessagingException {
+            message.saveChanges();
+            try (Transport transport = session.getTransport()) {
+                transport.connect(sender.host, sender.username, sender.password);
+                transport.sendMessage(message, message.getAllRecipients());
             }
-
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package org.dreamcat.common.x.compress;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -14,7 +15,6 @@ import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.dreamcat.common.io.FileUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -28,6 +28,7 @@ import java.io.OutputStream;
 /**
  * Create by tuke on 2020/4/7
  */
+@Slf4j
 @RequiredArgsConstructor
 public enum ArchiverEnum {
     Ar(ArArchiveOutputStream::new, ArjArchiveInputStream::new,
@@ -41,7 +42,7 @@ public enum ArchiverEnum {
     private final OutputConstructor outputConstructor;
     private final InputConstructor inputConstructor;
     private final EntryConstructor entryConstructor;
-    private volatile int bufferSize = 4096;
+    private final int bufferSize = 4096;
 
     // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
@@ -129,11 +130,16 @@ public enum ArchiverEnum {
         ArchiveEntry entry;
         while ((entry = ins.getNextEntry()) != null) {
             File dirFile = new File(destFile.getPath() + File.separator + entry.getName());
-            FileUtil.mkdirsForFile(dirFile);
-
             if (entry.isDirectory()) {
-                dirFile.mkdirs();
+                if (!dirFile.mkdirs() && !dirFile.exists()) {
+                    log.error("Failed to mkdir {}", dirFile);
+                }
             } else {
+                File parentDir = dirFile.getParentFile();
+                if (!parentDir.mkdirs() && !parentDir.exists()) {
+                    log.error("Failed to mkdir {}", parentDir);
+                    return;
+                }
                 unarchiveFile(dirFile, ins);
             }
         }

@@ -6,7 +6,6 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
-import org.dreamcat.common.io.FileUtil;
 import org.dreamcat.common.util.ObjectUtil;
 
 import java.io.BufferedInputStream;
@@ -93,7 +92,11 @@ public class SevenZUtil {
                         log.error("Failed to mkdir {}", dirFile);
                     }
                 } else {
-                    FileUtil.mkdirsForFile(dirFile);
+                    File parentDir = dirFile.getParentFile();
+                    if (!parentDir.mkdirs() && !parentDir.exists()) {
+                        log.error("Failed to mkdir {}", parentDir);
+                        return;
+                    }
                     unarchiveFile(dirFile, ins, entry.getSize());
                 }
             }

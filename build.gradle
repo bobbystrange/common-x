@@ -1,10 +1,10 @@
 ext {
-    javamailVersion = "1.6.2"
+    javaMailVersion = "1.6.2"
     compressVersion = "1.18"
 }
 
 dependencies {
-    implementation "javax.mail:javax.mail-api:$javamailVersion"
+    implementation "com.sun.mail:javax.mail:$javaMailVersion"
 
     // project
     implementation('org.dreamcat:common-core:0.0.1') { changing = true }
