@@ -19,8 +19,8 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class ExcelRichCell extends ExcelCell {
-    protected ExcelStyle style;
     protected ExcelFont font;
+    protected ExcelStyle style;
     protected ExcelHyperLink hyperLink;
 
     public ExcelRichCell(
@@ -32,5 +32,15 @@ public class ExcelRichCell extends ExcelCell {
             IExcelContent content, int rowIndex, int columnIndex,
             int rowSpan, int columnSpan) {
         super(content, rowIndex, columnIndex, rowSpan, columnSpan);
+    }
+
+    public ExcelRichCell(
+            IExcelContent content, int rowIndex, int columnIndex,
+            int rowSpan, int columnSpan,
+            ExcelFont font, ExcelStyle style, ExcelHyperLink hyperLink) {
+        super(content, rowIndex, columnIndex, rowSpan, columnSpan);
+        this.font = font;
+        this.style = style;
+        this.hyperLink = hyperLink;
     }
 }

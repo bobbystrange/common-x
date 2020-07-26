@@ -25,6 +25,8 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     ExcelFont getDefaultFont();
 
+    IExcelWorkbook<T> add(T sheet);
+
     default SXSSFWorkbook toWorkbookWithBigGrid() {
         return toWorkbook(new SXSSFWorkbook());
     }

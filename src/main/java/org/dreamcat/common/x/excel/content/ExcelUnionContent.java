@@ -34,6 +34,11 @@ public class ExcelUnionContent implements IExcelContent {
         setBooleanContent(value);
     }
 
+    public ExcelUnionContent(Object value) {
+        this();
+        setContent(value);
+    }
+
     public void setStringContent(String value) {
         this.stringContent.setValue(value);
         this.type = ExcelStringContent.class;
@@ -52,6 +57,34 @@ public class ExcelUnionContent implements IExcelContent {
     public void setRawContent(IExcelContent rawContent) {
         this.rawContent = rawContent;
         this.type = IExcelContent.class;
+    }
+
+    public void setContent(Object value) {
+        if (value instanceof Number) {
+            Number number = (Number) value;
+            setNumericContent(number.doubleValue());
+        } else if (value instanceof Boolean) {
+            Boolean bool = (Boolean) value;
+            setBooleanContent(bool);
+        } else if (value instanceof IExcelContent) {
+            setRawContent((IExcelContent) value);
+        } else {
+            setStringContent(value == null ? "" : value.toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (type.equals(ExcelStringContent.class)) {
+            return stringContent.getValue();
+        } else if (type.equals(ExcelNumericContent.class)) {
+            return String.valueOf(numericContent.getValue());
+        } else if (type.equals(ExcelBooleanContent.class)) {
+            return String.valueOf(booleanContent.isValue());
+        } else if (rawContent != null) {
+            return rawContent.toString();
+        }
+        throw new IllegalStateException();
     }
 
     @Override

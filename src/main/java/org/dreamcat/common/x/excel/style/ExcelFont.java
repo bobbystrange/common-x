@@ -2,19 +2,18 @@ package org.dreamcat.common.x.excel.style;
 
 import lombok.Data;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.dreamcat.common.x.excel.annotation.XlsFont;
 
 /**
  * Create by tuke on 2020/7/21
  */
 @Data
 public class ExcelFont {
-    private String fontName;
+    private String name;
     private boolean bold;
     private boolean italic;
     /**
@@ -39,7 +38,7 @@ public class ExcelFont {
      */
     private short color;
     // font height in points
-    private double height;
+    private short height;
 
     public static ExcelFont from(Workbook workbook, CellStyle style) {
         Font font;
@@ -52,7 +51,7 @@ public class ExcelFont {
         }
 
         ExcelFont excelFont = new ExcelFont();
-        excelFont.setFontName(font.getFontName());
+        excelFont.setName(font.getFontName());
         excelFont.setBold(font.getBold());
         excelFont.setItalic(font.getItalic());
         excelFont.setUnderline(font.getUnderline());
@@ -63,22 +62,35 @@ public class ExcelFont {
         return excelFont;
     }
 
+    public static ExcelFont from(XlsFont xlsFont) {
+        ExcelFont font = new ExcelFont();
+
+        if (!xlsFont.name().isEmpty()) font.setName(xlsFont.name());
+        font.setBold(xlsFont.bold());
+        font.setItalic(xlsFont.italic());
+
+        font.setStrikeout(xlsFont.strikeout());
+        if (xlsFont.underline() != -1) font.setUnderline(xlsFont.underline());
+        if (xlsFont.typeOffset() != -1) font.setTypeOffset(xlsFont.typeOffset());
+
+        if (xlsFont.color() != -1) {
+            font.setColor(xlsFont.color());
+        } else {
+            font.setColor(xlsFont.indexedColor().getIndex());
+        }
+        if (xlsFont.height() != -1) font.setHeight(xlsFont.height());
+
+        return font;
+    }
+
     public void fill(Font font) {
-        font.setFontName(fontName);
+        font.setFontName(name);
         font.setBold(bold);
         font.setItalic(italic);
         font.setUnderline(underline);
         font.setStrikeout(strikeout);
         font.setColor(color);
         font.setTypeOffset(typeOffset);
-
-        if (font instanceof XSSFFont) {
-            XSSFFont xssfFont = (XSSFFont) font;
-            // font height in points
-            xssfFont.setFontHeight(height);
-        } else if (font instanceof HSSFFont) {
-            HSSFFont hssfFont = (HSSFFont) font;
-            hssfFont.setFontHeightInPoints((short) height);
-        }
+        font.setFontHeightInPoints(height);
     }
 }

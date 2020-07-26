@@ -154,8 +154,8 @@ public class ExcelBuilder {
             return this;
         }
 
-        public RichSheetTerm height(double height) {
-            getFont().setHeight(height);
+        public RichSheetTerm height(int height) {
+            getFont().setHeight((short) height);
             return this;
         }
 

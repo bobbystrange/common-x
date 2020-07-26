@@ -53,4 +53,9 @@ public class ExcelWorkbook<T extends IExcelSheet> implements IExcelWorkbook<T> {
         return sheets.iterator();
     }
 
+    @Override
+    public IExcelWorkbook<T> add(T sheet) {
+        sheets.add(sheet);
+        return this;
+    }
 }

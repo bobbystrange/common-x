@@ -1,4 +1,4 @@
-package org.dreamcat.common.x.excel.wrapped;
+package org.dreamcat.common.x.excel.map;
 
 import lombok.Getter;
 import org.dreamcat.common.bean.BeanListUtil;
@@ -17,14 +17,18 @@ import java.util.List;
  */
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class WrappedListSheet implements IExcelSheet {
+public class SimpleListSheet implements IExcelSheet {
     private final String name;
-    // [Cell..., T1, Cell..., T2]
+    // [Cell..., T1, Cell..., T2], it mixes Cell & Pojo up
     private final List schemes;
 
-    public WrappedListSheet(String name) {
+    public SimpleListSheet(String name) {
+        this(name, new ArrayList<>(0));
+    }
+
+    public SimpleListSheet(String name, List schemes) {
         this.name = name;
-        this.schemes = new ArrayList<>(0);
+        this.schemes = schemes;
     }
 
     public void add(Object row) {
@@ -49,16 +53,16 @@ public class WrappedListSheet implements IExcelSheet {
         // as row index offset since row based structure
         int offset;
         int schemeSize;
-        transient int schemeIndex;
+        int schemeIndex;
 
-        transient List row;
+        List row;
         int columnSize;
-        transient int columnIndex;
+        int columnIndex;
 
         // only not null if scheme is a IExcelCell
-        transient IExcelCell cell;
-        transient IExcelCell nextCell;
-        transient int maxRowOffset;
+        IExcelCell cell;
+        IExcelCell nextCell;
+        int maxRowOffset;
 
         private Iter() {
             offset = 0;
@@ -137,17 +141,7 @@ public class WrappedListSheet implements IExcelSheet {
         public IExcelCell next() {
             // in cell case scheme
             if (nextCell != null) {
-                // move magical cursor for cells
-                cell = nextCell;
-                maxRowOffset = Math.max(cell.getRowIndex() + cell.getRowSpan(), maxRowOffset);
-                schemeIndex++;
-                if (schemeIndex < schemeSize) {
-                    setRow(schemes.get(schemeIndex));
-                } else {
-                    nextCell = null;
-                }
-
-                setRawContent(cell.getContent());
+                setCellAndMove();
                 return this;
             }
 
@@ -156,6 +150,7 @@ public class WrappedListSheet implements IExcelSheet {
                 // clear cell bits
                 cell = null;
                 offset += maxRowOffset;
+                maxRowOffset = 0;
             }
 
             // move magical cursor
@@ -165,21 +160,36 @@ public class WrappedListSheet implements IExcelSheet {
                 setRow(schemes.get(schemeIndex));
                 // move offset
                 offset++;
-                columnIndex = 0;
+                columnIndex = -1;
+
+                // next is a IExcelCell
+                if (row == null) {
+                    setCellAndMove();
+                    return this;
+                }
             }
+
+            // Note that -1 if next is a IExcelCell
+            if (columnIndex == -1) columnIndex = 0;
 
             // set content
             Object value = row.get(columnIndex);
-            if (value instanceof Number) {
-                Number number = (Number) value;
-                setNumericContent(number.doubleValue());
-            } else if (value instanceof Boolean) {
-                Boolean bool = (Boolean) value;
-                setBooleanContent(bool);
-            } else {
-                setStringContent(String.valueOf(value));
-            }
+            setContent(value);
             return this;
+        }
+
+        private void setCellAndMove() {
+            // move magical cursor for cells
+            cell = nextCell;
+            maxRowOffset = Math.max(cell.getRowIndex() + cell.getRowSpan(), maxRowOffset);
+            schemeIndex++;
+            if (schemeIndex < schemeSize) {
+                setRow(schemes.get(schemeIndex));
+            } else {
+                nextCell = null;
+            }
+
+            setRawContent(cell.getContent());
         }
 
         // Note that it makes hasNext() return false

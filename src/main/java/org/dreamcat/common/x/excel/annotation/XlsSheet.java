@@ -1,4 +1,4 @@
-package org.dreamcat.common.x.excel.core;
+package org.dreamcat.common.x.excel.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -9,8 +9,12 @@ import java.lang.annotation.Target;
 /**
  * Create by tuke on 2020/7/22
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface XlsSheet {
+    // sheet name
+    String name();
+
+    boolean onlyAnnotated() default false;
 }
