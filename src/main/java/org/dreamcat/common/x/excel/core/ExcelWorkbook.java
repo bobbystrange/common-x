@@ -6,6 +6,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
@@ -33,12 +34,16 @@ public class ExcelWorkbook<T extends IExcelSheet> implements IExcelWorkbook<T> {
         return from(new XSSFWorkbook(file));
     }
 
+    public static ExcelWorkbook<ExcelSheet> fromBigGrid(File file) throws IOException, InvalidFormatException {
+        return from(new SXSSFWorkbook(new XSSFWorkbook(file)));
+    }
+
     public static ExcelWorkbook<ExcelSheet> from2003(File file) throws IOException {
         return from(new HSSFWorkbook(new POIFSFileSystem(file, true)));
     }
 
     public static <T extends Workbook> ExcelWorkbook<ExcelSheet> from(T workbook) {
-        ExcelWorkbook<ExcelSheet> book = new ExcelWorkbook<ExcelSheet>();
+        ExcelWorkbook<ExcelSheet> book = new ExcelWorkbook<>();
 
         int sheetNum = workbook.getNumberOfSheets();
         for (int i = 0; i < sheetNum; i++) {

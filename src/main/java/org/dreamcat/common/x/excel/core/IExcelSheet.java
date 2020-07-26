@@ -18,7 +18,13 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
 public interface IExcelSheet extends Iterable<IExcelCell> {
     String getName();
 
-    default void fill(Workbook workbook, Sheet sheet, CellStyle defaultStyle, Font defaultFont) {
+    default IExcelWriteCallback writeCallback() {
+        return null;
+    }
+
+    default void fill(Workbook workbook, Sheet sheet, int sheetIndex, CellStyle defaultStyle, Font defaultFont) {
+        IExcelWriteCallback writeCallback = writeCallback();
+        if (writeCallback != null) writeCallback.onCreateSheet(workbook, sheet, sheetIndex);
         for (IExcelCell excelCell : this) {
             int ri = excelCell.getRowIndex();
             int ci = excelCell.getColumnIndex();
@@ -41,20 +47,23 @@ public interface IExcelSheet extends Iterable<IExcelCell> {
                 row = sheet.createRow(ri);
             }
             Cell cell = row.createCell(ci);
+            if (writeCallback != null) writeCallback.onCreateCell(workbook, sheet, sheetIndex, row, cell);
 
             cellContent.fill(cell);
             if (cellLink != null) {
                 cellLink.fill(excelCell, workbook, cell);
             }
 
+            Font font = null;
+            CellStyle style = null;
             if (cellStyle == null && cellFont == null) {
                 cell.setCellStyle(defaultStyle);
             } else {
-                CellStyle style = workbook.createCellStyle();
+                style = workbook.createCellStyle();
 
                 // cellStyle == null && cellFont != null
                 if (cellStyle == null) {
-                    Font font = workbook.createFont();
+                    font = workbook.createFont();
                     cellFont.fill(font);
                     style.setFont(font);
                 }
@@ -64,13 +73,16 @@ public interface IExcelSheet extends Iterable<IExcelCell> {
                 }
                 // cellStyle != null && cellFont != null
                 else {
-                    Font font = workbook.createFont();
+                    font = workbook.createFont();
                     cellFont.fill(font);
                     cellStyle.fill(style, font);
                 }
 
                 cell.setCellStyle(style);
             }
+            if (writeCallback != null)
+                writeCallback.onFinishCell(workbook, sheet, sheetIndex, row, cell, cellContent, style, font);
         }
+        if (writeCallback != null) writeCallback.onFinishSheet(workbook, sheet, sheetIndex);
     }
 }

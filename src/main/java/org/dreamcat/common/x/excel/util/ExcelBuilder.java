@@ -15,6 +15,7 @@ import org.dreamcat.common.x.excel.core.ExcelCell;
 import org.dreamcat.common.x.excel.core.ExcelRichCell;
 import org.dreamcat.common.x.excel.core.ExcelSheet;
 import org.dreamcat.common.x.excel.core.ExcelWorkbook;
+import org.dreamcat.common.x.excel.core.IExcelCell;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelHyperLink;
 import org.dreamcat.common.x.excel.style.ExcelRichStyle;
@@ -26,29 +27,65 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
 public class ExcelBuilder {
 
     public static SheetTerm sheet(String sheetName) {
-        ExcelWorkbook<ExcelSheet> book = new ExcelWorkbook<ExcelSheet>();
-        ExcelSheet sheet = new ExcelSheet(sheetName);
-        book.getSheets().add(sheet);
+        return new SheetTerm(new ExcelSheet(sheetName));
+    }
 
-        return new SheetTerm(book, sheet);
+    public static WorkbookTerm workbook() {
+        ExcelWorkbook<ExcelSheet> book = new ExcelWorkbook<>();
+        return new WorkbookTerm(book);
     }
 
     public static IExcelContent term(String string) {
         return new ExcelStringContent(string);
     }
 
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
     public static IExcelContent term(double number) {
         return new ExcelNumericContent(number);
     }
 
+    public static ExcelCell term(String string, int rowIndex, int columnIndex) {
+        return new ExcelCell(term(string), rowIndex, columnIndex);
+    }
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
+    public static ExcelCell term(String string, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+        return new ExcelCell(term(string), rowIndex, columnIndex, rowSpan, columnSpan);
+    }
+
     @RequiredArgsConstructor
     public static class SheetTerm {
-        private final ExcelWorkbook<ExcelSheet> book;
         private final ExcelSheet sheet;
-        private transient RichSheetTerm richSheetTerm;
+
+        public ExcelSheet finishSheet() {
+            return sheet;
+        }
+
+        public SheetTerm cell(IExcelCell cell) {
+            sheet.getCells().add(cell);
+            return this;
+        }
 
         public SheetTerm cell(IExcelContent term, int rowIndex, int columnIndex) {
             return cell(term, rowIndex, columnIndex, 1, 1);
+        }
+
+        public SheetTerm cell(double number, int rowIndex, int columnIndex) {
+            return cell(term(number), rowIndex, columnIndex);
+        }
+
+        public SheetTerm cell(double number, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+            return cell(term(number), rowIndex, columnIndex, rowSpan, columnSpan);
+        }
+
+        public SheetTerm cell(String string, int rowIndex, int columnIndex) {
+            return cell(term(string), rowIndex, columnIndex);
+        }
+
+        public SheetTerm cell(String string, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+            return cell(term(string), rowIndex, columnIndex, rowSpan, columnSpan);
         }
 
         public SheetTerm cell(IExcelContent term, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
@@ -56,34 +93,49 @@ public class ExcelBuilder {
             return this;
         }
 
+        public RichSheetTerm richCell(String string, int rowIndex, int columnIndex) {
+            return richCell(term(string), rowIndex, columnIndex, 1, 1);
+        }
+
+        public RichSheetTerm richCell(double number, int rowIndex, int columnIndex) {
+            return richCell(term(number), rowIndex, columnIndex, 1, 1);
+        }
+
         public RichSheetTerm richCell(IExcelContent term, int rowIndex, int columnIndex) {
             return richCell(term, rowIndex, columnIndex, 1, 1);
+        }
+
+        public RichSheetTerm richCell(String string, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+            return richCell(term(string), rowIndex, columnIndex, rowSpan, columnSpan);
+        }
+
+        public RichSheetTerm richCell(double number, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+            return richCell(term(number), rowIndex, columnIndex, rowSpan, columnSpan);
         }
 
         public RichSheetTerm richCell(IExcelContent term, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
             ExcelRichCell cell = new ExcelRichCell(term, rowIndex, columnIndex, rowSpan, columnSpan);
             sheet.getCells().add(cell);
-            if (richSheetTerm == null) {
-                richSheetTerm = new RichSheetTerm(this, cell);
-            }
-            return richSheetTerm;
-        }
-
-        public ExcelWorkbook<ExcelSheet> finish() {
-            return book;
+            return new RichSheetTerm(this, cell);
         }
     }
 
-    @RequiredArgsConstructor
     public static class RichSheetTerm {
         private final SheetTerm sheetTerm;
         private final ExcelRichCell cell;
-        private transient ExcelFont font;
-        private transient ExcelStyle style;
+        private ExcelFont font;
+        private ExcelStyle style;
+        private ExcelRichStyle richStyle;
 
-        public SheetTerm finish() {
-            this.font = null;
-            this.style = null;
+        public RichSheetTerm(SheetTerm sheetTerm, ExcelRichCell cell) {
+            this.sheetTerm = sheetTerm;
+            this.cell = cell;
+        }
+
+        public SheetTerm finishCell() {
+            if (richStyle != null) cell.setStyle(richStyle);
+            else if (style != null) cell.setStyle(style);
+            if (font != null) cell.setFont(font);
             return sheetTerm;
         }
 
@@ -164,7 +216,7 @@ public class ExcelBuilder {
             return this;
         }
 
-        public RichSheetTerm horizontalAlignment(VerticalAlignment verticalAlignment) {
+        public RichSheetTerm verticalAlignment(VerticalAlignment verticalAlignment) {
             getStyle().setVerticalAlignment(verticalAlignment);
             return this;
         }
@@ -214,106 +266,112 @@ public class ExcelBuilder {
             return this;
         }
 
-        public RichStyleTerm richStyle() {
-            return new RichStyleTerm(this, style);
+        // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
+
+        public RichSheetTerm rotation(short rotation) {
+            getRichStyle().setRotation(rotation);
+            return this;
         }
+
+        public RichSheetTerm bgColor(short bgColor) {
+            getRichStyle().setBgColor(bgColor);
+            return this;
+        }
+
+        public RichSheetTerm fgColor(short fgColor) {
+            getRichStyle().setFgColor(fgColor);
+            return this;
+        }
+
+        public RichSheetTerm fillPattern(FillPatternType fillPatternType) {
+            getRichStyle().setFillPattern(fillPatternType);
+            return this;
+        }
+
+        public RichSheetTerm borderBottom(BorderStyle borderBottom) {
+            getRichStyle().setBorderBottom(borderBottom);
+            return this;
+        }
+
+        public RichSheetTerm borderLeft(BorderStyle borderLeft) {
+            getRichStyle().setBorderLeft(borderLeft);
+            return this;
+        }
+
+        public RichSheetTerm borderTop(BorderStyle borderTop) {
+            getRichStyle().setBorderTop(borderTop);
+            return this;
+        }
+
+        public RichSheetTerm borderRight(BorderStyle borderRight) {
+            getRichStyle().setBorderRight(borderRight);
+            return this;
+        }
+
+        public RichSheetTerm bottomBorderColor(short bottomBorderColor) {
+            getRichStyle().setBottomBorderColor(bottomBorderColor);
+            return this;
+        }
+
+        public RichSheetTerm leftBorderColor(short leftBorderColor) {
+            getRichStyle().setLeftBorderColor(leftBorderColor);
+            return this;
+        }
+
+        public RichSheetTerm topBorderColor(short topBorderColor) {
+            getRichStyle().setTopBorderColor(topBorderColor);
+            return this;
+        }
+
+        public RichSheetTerm rightBorderColor(short rightBorderColor) {
+            getRichStyle().setRightBorderColor(rightBorderColor);
+            return this;
+        }
+
+        // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
         private ExcelFont getFont() {
             if (font == null) {
                 font = new ExcelFont();
-                cell.setFont(font);
             }
             return font;
         }
 
         private ExcelStyle getStyle() {
-            if (style == null) {
-                style = new ExcelStyle();
-                cell.setStyle(style);
-            }
+            if (richStyle != null) return richStyle;
+            if (style != null) return style;
+            style = new ExcelStyle();
             return style;
         }
 
-    }
-
-    public static class RichStyleTerm {
-        private final RichSheetTerm richSheetTerm;
-        private ExcelRichStyle richStyle;
-
-        public RichStyleTerm(RichSheetTerm richSheetTerm, ExcelStyle style) {
-            this.richSheetTerm = richSheetTerm;
-            // fixme replace BeanCopyUtil with asm
-            if (style == null) {
-                this.richStyle = new ExcelRichStyle();
-            } else {
-                this.richStyle = BeanCopyUtil.copy(style, ExcelRichStyle.class);
+        private ExcelRichStyle getRichStyle() {
+            if (richStyle == null) {
+                if (style == null) {
+                    richStyle = new ExcelRichStyle();
+                } else {
+                    // Todo replace BeanCopyUtil with asm
+                    richStyle = BeanCopyUtil.copy(style, ExcelRichStyle.class);
+                    style = null;
+                }
             }
-            richSheetTerm.cell.setStyle(this.richStyle);
+            return richStyle;
         }
 
-        public RichSheetTerm finish() {
-            this.richStyle = null;
-            return richSheetTerm;
-        }
-
-        public RichStyleTerm rotation(short rotation) {
-            richStyle.setRotation(rotation);
-            return this;
-        }
-
-        public RichStyleTerm bgColor(short bgColor) {
-            richStyle.setBgColor(bgColor);
-            return this;
-        }
-
-        public RichStyleTerm fgColor(short fgColor) {
-            richStyle.setFgColor(fgColor);
-            return this;
-        }
-
-        public RichStyleTerm fillPattern(FillPatternType fillPatternType) {
-            richStyle.setFillPattern(fillPatternType);
-            return this;
-        }
-
-        public RichStyleTerm borderBottom(BorderStyle borderBottom) {
-            richStyle.setBorderBottom(borderBottom);
-            return this;
-        }
-
-        public RichStyleTerm borderLeft(BorderStyle borderLeft) {
-            richStyle.setBorderLeft(borderLeft);
-            return this;
-        }
-
-        public RichStyleTerm borderTop(BorderStyle borderTop) {
-            richStyle.setBorderTop(borderTop);
-            return this;
-        }
-
-        public RichStyleTerm borderRight(BorderStyle borderRight) {
-            richStyle.setBorderRight(borderRight);
-            return this;
-        }
-
-        public RichStyleTerm bottomBorderColor(short bottomBorderColor) {
-            richStyle.setBottomBorderColor(bottomBorderColor);
-            return this;
-        }
-
-        public RichStyleTerm leftBorderColor(short leftBorderColor) {
-            richStyle.setLeftBorderColor(leftBorderColor);
-            return this;
-        }
-
-        public RichStyleTerm topBorderColor(short topBorderColor) {
-            richStyle.setTopBorderColor(topBorderColor);
-            return this;
-        }
-
-        public RichStyleTerm rightBorderColor(short rightBorderColor) {
-            richStyle.setRightBorderColor(rightBorderColor);
-            return this;
-        }
     }
+
+    @RequiredArgsConstructor
+    public static class WorkbookTerm {
+        private final ExcelWorkbook<ExcelSheet> book;
+
+        public WorkbookTerm addSheet(ExcelSheet sheet) {
+            book.getSheets().add(sheet);
+            return this;
+        }
+
+        public ExcelWorkbook<ExcelSheet> finish() {
+            return book;
+        }
+
+    }
+
 }

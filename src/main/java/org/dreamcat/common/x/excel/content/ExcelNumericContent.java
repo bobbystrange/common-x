@@ -23,13 +23,18 @@ public class ExcelNumericContent implements IExcelContent {
 
     @Override
     public String toString() {
+        // long round = Math.round(value);
+        // if (Math.abs(value - round) < Double.MIN_NORMAL) {
+        //     return Long.toString(round);
+        // }
+        // if (value > -1000 && value < 10000) {
+        //     return String.format("%.6g", value);
+        // }
+        // return String.format("%.8g", value);
         long round = Math.round(value);
         if (Math.abs(value - round) < Double.MIN_NORMAL) {
             return Long.toString(round);
         }
-        if (value > -1000 && value < 10000) {
-            return String.format("%.6g", value);
-        }
-        return String.format("%.8g", value);
+        return String.valueOf(value);
     }
 }

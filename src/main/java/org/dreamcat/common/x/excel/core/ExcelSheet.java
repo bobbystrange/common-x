@@ -27,6 +27,7 @@ import java.util.TreeMap;
 public class ExcelSheet implements IExcelSheet {
     private final String name;
     private final List<IExcelCell> cells;
+    private IExcelWriteCallback writeCallback;
 
     public ExcelSheet(String name) {
         this.name = name;
@@ -129,6 +130,11 @@ public class ExcelSheet implements IExcelSheet {
             if (excelCell != null) return excelCell;
         }
         return null;
+    }
+
+    @Override
+    public IExcelWriteCallback writeCallback() {
+        return writeCallback;
     }
 
     @Override

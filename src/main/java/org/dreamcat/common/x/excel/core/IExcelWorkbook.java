@@ -15,11 +15,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * Create by tuke on 2020/7/22
  */
 public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
+
+    List<T> getSheets();
 
     ExcelStyle getDefaultStyle();
 
@@ -27,12 +30,12 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     IExcelWorkbook<T> add(T sheet);
 
-    default SXSSFWorkbook toWorkbookWithBigGrid() {
-        return toWorkbook(new SXSSFWorkbook());
-    }
-
     default XSSFWorkbook toWorkbook() {
         return toWorkbook(new XSSFWorkbook());
+    }
+
+    default SXSSFWorkbook toWorkbookWithBigGrid() {
+        return toWorkbook(new SXSSFWorkbook());
     }
 
     default HSSFWorkbook toWorkbook2003() {
@@ -48,11 +51,11 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
         ExcelStyle defaultStyle = getDefaultStyle();
         if (defaultStyle != null) defaultStyle.fill(style, font);
 
+        int sheetIndex = 0;
         for (T excelSheet : this) {
             Sheet sheet = workbook.createSheet(excelSheet.getName());
-            excelSheet.fill(workbook, sheet, style, font);
+            excelSheet.fill(workbook, sheet, sheetIndex++, style, font);
         }
-
         return workbook;
     }
 
@@ -68,6 +71,22 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     default void writeTo(OutputStream ostream) throws IOException {
         try (Workbook workbook = toWorkbook()) {
+            workbook.write(ostream);
+        }
+    }
+
+    default void writeToWithBigGrid(String newFile) throws IOException {
+        writeToWithBigGrid(new File(newFile));
+    }
+
+    default void writeToWithBigGrid(File newFile) throws IOException {
+        try (FileOutputStream ostream = new FileOutputStream(newFile)) {
+            writeToWithBigGrid(ostream);
+        }
+    }
+
+    default void writeToWithBigGrid(OutputStream ostream) throws IOException {
+        try (Workbook workbook = toWorkbookWithBigGrid()) {
             workbook.write(ostream);
         }
     }
@@ -91,6 +110,14 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
     default byte[] toByteArray() throws IOException {
         try (ByteArrayOutputStream ostream = new ByteArrayOutputStream();
              Workbook workbook = toWorkbook()) {
+            workbook.write(ostream);
+            return ostream.toByteArray();
+        }
+    }
+
+    default byte[] toByteArrayWithBigGrid() throws IOException {
+        try (ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+             Workbook workbook = toWorkbookWithBigGrid()) {
             workbook.write(ostream);
             return ostream.toByteArray();
         }

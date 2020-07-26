@@ -1,9 +1,11 @@
 package org.dreamcat.common.x.excel.map;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.dreamcat.common.x.excel.content.IExcelContent;
 import org.dreamcat.common.x.excel.core.IExcelCell;
 import org.dreamcat.common.x.excel.core.IExcelSheet;
+import org.dreamcat.common.x.excel.core.IExcelWriteCallback;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
@@ -21,6 +23,8 @@ public class AnnotationListSheet implements IExcelSheet {
     private final String name;
     // [Sheet..., T1..., Sheet..., T2...], it mixes Sheet & Pojo up
     private final List schemes;
+    @Setter
+    private IExcelWriteCallback writeCallback;
 
     public AnnotationListSheet(String name) {
         this(name, new ArrayList<>(0));
@@ -48,6 +52,11 @@ public class AnnotationListSheet implements IExcelSheet {
         return this.new Iter();
     }
 
+    @Override
+    public IExcelWriteCallback writeCallback() {
+        return writeCallback;
+    }
+
     @Getter
     private class Iter implements Iterator<IExcelCell>, IExcelCell {
         // as row index offset since row based structure
@@ -58,9 +67,11 @@ public class AnnotationListSheet implements IExcelSheet {
         IExcelCell cell;
         int maxRowOffset;
         Iterator<IExcelCell> iterator;
+        boolean disableRowSheetIter;
         AnnotationRowSheet.Iter rowSheetIter;
 
         private Iter() {
+            disableRowSheetIter = true;
             schemeSize = schemes.size();
             if (schemeSize == 0) return;
             move();
@@ -109,13 +120,12 @@ public class AnnotationListSheet implements IExcelSheet {
                 maxRowOffset = 0;
             }
             return (iterator != null && iterator.hasNext()) ||
-                    (rowSheetIter != null && rowSheetIter.hasNext()) ||
-                    schemeIndex < schemeSize;
+                    (!disableRowSheetIter && rowSheetIter != null && rowSheetIter.hasNext());
         }
 
         @Override
         public IExcelCell next() {
-            if (iterator != null) {
+            if (disableRowSheetIter && iterator != null) {
                 // prepare cell
                 cell = iterator.next();
                 maxRowOffset = Math.max(maxRowOffset, cell.getRowSpan());
@@ -123,7 +133,7 @@ public class AnnotationListSheet implements IExcelSheet {
                 if (iterator.hasNext()) return this;
             }
 
-            if (rowSheetIter != null) {
+            if (!disableRowSheetIter && rowSheetIter != null) {
                 // prepare cell
                 cell = rowSheetIter.next();
                 maxRowOffset = Math.max(maxRowOffset, cell.getRowSpan());
@@ -135,6 +145,8 @@ public class AnnotationListSheet implements IExcelSheet {
             schemeIndex++;
             if (schemeIndex < schemeSize) {
                 move();
+            } else {
+                disableRowSheetIter = true;
             }
             return this;
         }
@@ -146,13 +158,16 @@ public class AnnotationListSheet implements IExcelSheet {
             Object rawScheme = schemes.get(schemeIndex);
             if (rawScheme instanceof IExcelSheet) {
                 iterator = ((IExcelSheet) rawScheme).iterator();
+                disableRowSheetIter = true;
             } else {
                 if (rowSheetIter == null) {
                     rowSheetIter = new AnnotationRowSheet(rawScheme).new Iter();
                 } else {
                     rowSheetIter.reset(rawScheme);
                 }
+                disableRowSheetIter = false;
             }
         }
     }
+
 }

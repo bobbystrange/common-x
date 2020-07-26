@@ -81,10 +81,9 @@ public class ExcelUnionContent implements IExcelContent {
             return String.valueOf(numericContent.getValue());
         } else if (type.equals(ExcelBooleanContent.class)) {
             return String.valueOf(booleanContent.isValue());
-        } else if (rawContent != null) {
+        } else {
             return rawContent.toString();
         }
-        throw new IllegalStateException();
     }
 
     @Override

@@ -43,7 +43,7 @@ public class XlsMetaTest {
 
         @XlsStyle(verticalAlignment = VerticalAlignment.CENTER)
         @XlsCell(expanded = true)
-        @XlsFont(name = "黑体", height = 21, italic = true, indexedColor = IndexedColors.LIGHT_GREEN)
+        @XlsFont(name = "黑体", height = 21, italic = true, indexedColor = IndexedColors.AQUA)
         Item V;
 
         @XlsRichStyle(
