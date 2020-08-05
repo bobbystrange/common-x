@@ -2,13 +2,8 @@ package org.dreamcat.common.x.excel.map;
 
 import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
 import org.dreamcat.common.x.excel.core.ExcelWorkbook;
-import org.dreamcat.common.x.excel.core.IExcelCell;
 import org.dreamcat.common.x.excel.util.ExcelBuilderTest;
 import org.junit.Test;
-
-import java.util.Arrays;
-
-import static org.dreamcat.common.util.RandomUtil.*;
 
 /**
  * Create by tuke on 2020/7/26
@@ -17,81 +12,53 @@ public class AnnotationListSheetTest {
 
     @Test
     public void testSmall() throws Exception {
-        AnnotationListSheet sheet = new AnnotationListSheet("Sheet One");
-        XlsMetaTest.Pojo pojo = new XlsMetaTest.Pojo(
-                randi(10),
-                Arrays.asList(rand(), rand(), rand()),
-                new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                Arrays.asList(
-                        new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                        new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                        new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3))
-                ));
-        sheet.add(pojo);
+        // body + head + body + head + body
+        AnnotationListSheet sheet1 = new AnnotationListSheet("Sheet One");
+        sheet1.add(XlsMetaTest.newPojo());
+        sheet1.add(ExcelBuilderTest.headerSheet());
+        sheet1.add(XlsMetaTest.newPojo());
+        sheet1.add(ExcelBuilderTest.headerSheet());
+        sheet1.add(XlsMetaTest.newPojo());
 
-        sheet.add(ExcelBuilderTest.headerSheet());
-        for (IExcelCell cell : sheet) {
-            System.out.printf("[%d, %d, %d, %d] %s\n%s\n%s\n\n",
-                    cell.getRowIndex(), cell.getColumnIndex(),
-                    cell.getRowSpan(), cell.getColumnSpan(),
-                    cell.getContent(),
-                    cell.getFont(), cell.getStyle()
-            );
-        }
+        // head + body + head + body + head
+        AnnotationListSheet sheet2 = new AnnotationListSheet("Sheet Two");
+        sheet2.setAnnotationStyle(true);
+        sheet2.setWriteCallback(new FitWidthWriteCallback());
+        sheet2.add(ExcelBuilderTest.headerSheet());
+        sheet2.add(XlsMetaTest.newPojo());
+        sheet2.add(ExcelBuilderTest.headerSheet());
+        sheet2.add(XlsMetaTest.newPojo());
+        sheet2.add(ExcelBuilderTest.headerSheet());
 
-        sheet.setWriteCallback(new FitWidthWriteCallback());
         new ExcelWorkbook<>()
-                .add(sheet)
+                .add(sheet1)
+                .add(sheet2)
                 .writeTo("/Users/tuke/Downloads/book.xlsx");
     }
 
     @Test
     public void test() throws Exception {
-        AnnotationListSheet sheet = new AnnotationListSheet("Sheet One");
-        sheet.add(ExcelBuilderTest.headerSheet());
-        sheet.add(ExcelBuilderTest.headerSheet());
+        // body + head + body + head + body
+        AnnotationListSheet sheet1 = new AnnotationListSheet("Sheet One");
+        sheet1.setAnnotationStyle(true);
+        sheet1.setWriteCallback(new FitWidthWriteCallback());
+        for (int i = 0; i < 6; i++) sheet1.add(XlsMetaTest.newPojo());
+        for (int i = 0; i < 6; i++) sheet1.add(ExcelBuilderTest.headerSheet());
+        for (int i = 0; i < 6; i++) sheet1.add(XlsMetaTest.newPojo());
+        for (int i = 0; i < 6; i++) sheet1.add(ExcelBuilderTest.headerSheet());
+        for (int i = 0; i < 6; i++) sheet1.add(XlsMetaTest.newPojo());
 
-        for (int i = 0; i < 6; i++) {
-            XlsMetaTest.Pojo pojo = new XlsMetaTest.Pojo(
-                    randi(10),
-                    Arrays.asList(rand(), rand(), rand()),
-                    new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                    Arrays.asList(
-                            new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                            new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                            new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3))
-                    ));
-            sheet.add(pojo);
-        }
-
-        sheet.add(ExcelBuilderTest.headerSheet());
-
-        for (int i = 0; i < 6; i++) {
-            XlsMetaTest.Pojo pojo = new XlsMetaTest.Pojo(
-                    randi(10),
-                    Arrays.asList(rand(), rand(), rand()),
-                    new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                    Arrays.asList(
-                            new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                            new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
-                            new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3))
-                    ));
-            sheet.add(pojo);
-        }
-
-        for (IExcelCell cell : sheet) {
-            System.out.printf("[%d, %d, %d, %d] %s\n%s\n%s\n\n",
-                    cell.getRowIndex(), cell.getColumnIndex(),
-                    cell.getRowSpan(), cell.getColumnSpan(),
-                    cell.getContent(),
-                    cell.getFont(), cell.getStyle()
-            );
-        }
-
-        sheet.setWriteCallback(new FitWidthWriteCallback());
+        // head + body + head + body + head
+        AnnotationListSheet sheet2 = new AnnotationListSheet("Sheet Two");
+        for (int i = 0; i < 6; i++) sheet2.add(ExcelBuilderTest.headerSheet());
+        for (int i = 0; i < 6; i++) sheet2.add(XlsMetaTest.newPojo());
+        for (int i = 0; i < 6; i++) sheet2.add(ExcelBuilderTest.headerSheet());
+        for (int i = 0; i < 6; i++) sheet2.add(XlsMetaTest.newPojo());
+        for (int i = 0; i < 6; i++) sheet2.add(ExcelBuilderTest.headerSheet());
 
         new ExcelWorkbook<>()
-                .add(sheet)
+                .add(sheet1)
+                .add(sheet2)
                 .writeTo("/Users/tuke/Downloads/book.xlsx");
     }
 

@@ -14,17 +14,31 @@ import org.dreamcat.common.x.excel.annotation.XlsSheet;
 import org.dreamcat.common.x.excel.annotation.XlsStyle;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+
+import static org.dreamcat.common.util.RandomUtil.*;
 
 /**
  * Create by tuke on 2020/7/25
  */
 public class XlsMetaTest {
 
+    public static Pojo newPojo() {
+        return new Pojo(
+                randi(10),
+                Arrays.asList(rand(), rand(), rand()),
+                new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
+                Arrays.asList(
+                        new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
+                        new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3)),
+                        new XlsMetaTest.Item((long) (randi(1 << 16)), choose26(3))
+                ));
+    }
+
     @Test
-    public void test() throws IOException {
-        XlsMeta metadata = XlsBuilder.parse(Pojo.class, Item.class);
+    public void test() {
+        XlsMeta metadata = XlsBuilder.parse(Pojo.class, true, Item.class);
         System.out.println(metadata);
     }
 

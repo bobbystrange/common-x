@@ -1,6 +1,8 @@
 package org.dreamcat.common.x.excel.map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.dreamcat.common.util.ObjectUtil;
 import org.dreamcat.common.x.excel.content.ExcelUnionContent;
 import org.dreamcat.common.x.excel.content.IExcelContent;
 import org.dreamcat.common.x.excel.core.IExcelCell;
@@ -8,6 +10,7 @@ import org.dreamcat.common.x.excel.core.IExcelSheet;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,37 +23,38 @@ import java.util.stream.Collectors;
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class AnnotationRowSheet implements IExcelSheet {
-
-    private final Map<Class, XlsMeta> metaMap = new HashMap<>();
+    private final Map<Class, MetaCacheLine> metaMap = new HashMap<>();
     private String name;
     private Object scheme;
     private XlsMeta meta;
     private List<Integer> indexes;
 
     public AnnotationRowSheet(Object scheme) {
-        Class clazz = scheme.getClass();
-        this.meta = XlsBuilder.parseObject(scheme);
-        this.metaMap.put(clazz, meta);
-        this.indexes = meta.getFieldIndexes();
+        reset(scheme);
+    }
 
-        if (meta.name.isEmpty()) {
-            throw new IllegalArgumentException("sheet name is empty in " + clazz + ", check its annotations");
+    private static boolean isNotListOrArray(Object o) {
+        return !(o instanceof List) && !(o.getClass().isArray());
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static List cast(Object listOrArray) {
+        if (listOrArray instanceof Object[]) {
+            return Arrays.asList((Object[]) listOrArray);
+        } else {
+            return (List) listOrArray;
         }
-        this.name = meta.name;
-        this.scheme = scheme;
     }
 
     public void reset(Object scheme) {
         Class clazz = scheme.getClass();
         if (metaMap.containsKey(clazz)) return;
 
-        this.meta = XlsBuilder.parseObject(scheme);
-        this.metaMap.put(clazz, meta);
+        this.meta = XlsBuilder.parse(scheme);
+        checkMetaName(clazz);
         this.indexes = meta.getFieldIndexes();
+        this.metaMap.put(clazz, new MetaCacheLine(meta, indexes));
 
-        if (meta.name.isEmpty()) {
-            throw new IllegalArgumentException("sheet name is empty in " + clazz + ", check its annotations");
-        }
         this.name = meta.name;
         this.scheme = scheme;
     }
@@ -58,6 +62,19 @@ public class AnnotationRowSheet implements IExcelSheet {
     @Override
     public Iterator<IExcelCell> iterator() {
         return this.new Iter();
+    }
+    /// static area
+
+    private void checkMetaName(Class clazz) {
+        if (ObjectUtil.isEmpty(meta.name)) {
+            throw new IllegalArgumentException("sheet name is empty in " + clazz + ", check its annotations");
+        }
+    }
+
+    @AllArgsConstructor
+    static class MetaCacheLine {
+        XlsMeta meta;
+        List<Integer> indexes;
     }
 
     @Getter
@@ -260,13 +277,13 @@ public class AnnotationRowSheet implements IExcelSheet {
 
             if (!cell.expanded) {
                 // s
-                if (XlsBuilder.isNotListOrArray(fieldValue)) {
+                if (isNotListOrArray(fieldValue)) {
                     scalar = fieldValue;
                     return;
                 }
 
                 // sa
-                scalarArray = XlsBuilder.cast(fieldValue);
+                scalarArray = cast(fieldValue);
                 scalarArraySize = scalarArray.size();
                 if (scalarArraySize == 0) {
                     throw new IllegalArgumentException("empty list/array field value in " + scheme.getClass());
@@ -276,9 +293,14 @@ public class AnnotationRowSheet implements IExcelSheet {
             }
 
             // v
-            if (XlsBuilder.isNotListOrArray(fieldValue)) {
-                subMeta = metaMap.computeIfAbsent(fieldValue.getClass(), c -> XlsBuilder.parse(c, false));
-                subIndexes = subMeta.getFieldIndexes();
+            if (isNotListOrArray(fieldValue)) {
+                MetaCacheLine cacheLine = metaMap.computeIfAbsent(
+                        fieldValue.getClass(), c -> {
+                            XlsMeta meta = XlsBuilder.parse(c, false);
+                            return new MetaCacheLine(meta, meta.getFieldIndexes());
+                        });
+                subMeta = cacheLine.meta;
+                subIndexes = cacheLine.indexes;
                 vector = subMeta.getFieldValues(fieldValue);
                 vectorSize = vector.size();
                 vectorIndex = 0;
@@ -286,13 +308,17 @@ public class AnnotationRowSheet implements IExcelSheet {
             }
 
             // va
-            List rectangle = XlsBuilder.cast(fieldValue);
+            List rectangle = cast(fieldValue);
             if (rectangle.isEmpty()) {
                 throw new IllegalArgumentException("empty list/array field value in " + scheme.getClass());
             }
-            subMeta = metaMap.computeIfAbsent(rectangle.get(0).getClass(), c -> XlsBuilder.parse(c, false));
-            ;
-            subIndexes = subMeta.getFieldIndexes();
+            MetaCacheLine cacheLine = metaMap.computeIfAbsent(
+                    rectangle.get(0).getClass(), c -> {
+                        XlsMeta meta = XlsBuilder.parse(c, false);
+                        return new MetaCacheLine(meta, meta.getFieldIndexes());
+                    });
+            subMeta = cacheLine.meta;
+            subIndexes = cacheLine.indexes;
 
             vectorArray = (List<List>) rectangle.stream().map(subMeta::getFieldValues).collect(Collectors.toList());
             vectorArraySize = vectorArray.size();

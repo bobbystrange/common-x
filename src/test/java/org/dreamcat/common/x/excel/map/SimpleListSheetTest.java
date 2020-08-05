@@ -89,6 +89,30 @@ public class SimpleListSheetTest {
         book.writeTo("/Users/tuke/Downloads/book.xlsx");
     }
 
+    @Test
+    public void testHuge() throws Exception {
+        //Thread.sleep(30_000);
+
+        SimpleListSheet sheet = new SimpleListSheet("Sheet One");
+        // list1
+        sheet.add(new ExcelCell(term("A1:C2"), 0, 0, 2, 3));
+        sheet.add(new ExcelCell(term("D1:D3"), 0, 3, 3, 1));
+        sheet.add(new ExcelCell(term("B3:C3"), 2, 1, 1, 2));
+        sheet.add(new ExcelCell(term("A3"), 2, 0));
+
+        // list2
+        ArrayList<Pojo> pojoList;
+        pojoList = new ArrayList<>();
+        for (int i = 0; i < 20_0000; i++) {
+            pojoList.add(new Pojo(i, rand(), null, choose26(6)));
+        }
+        sheet.addAll(pojoList);
+
+        ExcelWorkbook<SimpleListSheet> book = new ExcelWorkbook<>();
+        book.getSheets().add(sheet);
+        book.writeToWithBigGrid("/Users/tuke/Downloads/book.xlsx");
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

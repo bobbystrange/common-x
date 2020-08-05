@@ -16,6 +16,10 @@ import java.util.List;
 
 /**
  * Create by tuke on 2020/7/26
+ * <p>
+ * It is a very tricky implementation to translate annotated beans to sheet interface,
+ * which simplifies the API usage without sacrificing performance
+ * Note that it is thread-unsafe in the iteration however
  */
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -23,6 +27,9 @@ public class AnnotationListSheet implements IExcelSheet {
     private final String name;
     // [Sheet..., T1..., Sheet..., T2...], it mixes Sheet & Pojo up
     private final List schemes;
+    // Note that it maybe create more than 64000 cell styles on one sheet, that will not work
+    @Setter
+    private boolean annotationStyle;
     @Setter
     private IExcelWriteCallback writeCallback;
 
@@ -67,11 +74,13 @@ public class AnnotationListSheet implements IExcelSheet {
         IExcelCell cell;
         int maxRowOffset;
         Iterator<IExcelCell> iterator;
-        boolean disableRowSheetIter;
+        // whether next is in row sheet iter case or not
+        boolean nextInRowSheetIterCase;
+        // just switch row sheet to iterator
+        boolean inSwitchIterCase;
         AnnotationRowSheet.Iter rowSheetIter;
 
         private Iter() {
-            disableRowSheetIter = true;
             schemeSize = schemes.size();
             if (schemeSize == 0) return;
             move();
@@ -104,11 +113,13 @@ public class AnnotationListSheet implements IExcelSheet {
 
         @Override
         public ExcelStyle getStyle() {
+            if ((nextInRowSheetIterCase || inSwitchIterCase) && !annotationStyle) return null;
             return cell.getStyle();
         }
 
         @Override
         public ExcelFont getFont() {
+            if ((nextInRowSheetIterCase || inSwitchIterCase) && !annotationStyle) return null;
             return cell.getFont();
         }
 
@@ -120,12 +131,13 @@ public class AnnotationListSheet implements IExcelSheet {
                 maxRowOffset = 0;
             }
             return (iterator != null && iterator.hasNext()) ||
-                    (!disableRowSheetIter && rowSheetIter != null && rowSheetIter.hasNext());
+                    (nextInRowSheetIterCase && rowSheetIter != null && rowSheetIter.hasNext());
         }
 
         @Override
         public IExcelCell next() {
-            if (disableRowSheetIter && iterator != null) {
+            inSwitchIterCase = false;
+            if (!nextInRowSheetIterCase && iterator != null) {
                 // prepare cell
                 cell = iterator.next();
                 maxRowOffset = Math.max(maxRowOffset, cell.getRowSpan());
@@ -133,7 +145,7 @@ public class AnnotationListSheet implements IExcelSheet {
                 if (iterator.hasNext()) return this;
             }
 
-            if (!disableRowSheetIter && rowSheetIter != null) {
+            if (nextInRowSheetIterCase && rowSheetIter != null) {
                 // prepare cell
                 cell = rowSheetIter.next();
                 maxRowOffset = Math.max(maxRowOffset, cell.getRowSpan());
@@ -146,7 +158,10 @@ public class AnnotationListSheet implements IExcelSheet {
             if (schemeIndex < schemeSize) {
                 move();
             } else {
-                disableRowSheetIter = true;
+                // end of iteration
+                nextInRowSheetIterCase = false;
+                rowSheetIter = null;
+                inSwitchIterCase = true;
             }
             return this;
         }
@@ -155,18 +170,21 @@ public class AnnotationListSheet implements IExcelSheet {
         private void move() {
             maxRowOffset = -maxRowOffset;
 
+            inSwitchIterCase = nextInRowSheetIterCase;
             Object rawScheme = schemes.get(schemeIndex);
             if (rawScheme instanceof IExcelSheet) {
                 iterator = ((IExcelSheet) rawScheme).iterator();
-                disableRowSheetIter = true;
+                nextInRowSheetIterCase = false;
             } else {
                 if (rowSheetIter == null) {
                     rowSheetIter = new AnnotationRowSheet(rawScheme).new Iter();
                 } else {
                     rowSheetIter.reset(rawScheme);
                 }
-                disableRowSheetIter = false;
+                nextInRowSheetIterCase = true;
             }
+            // nextInRowSheetIterCase is modified from true to false
+            inSwitchIterCase = inSwitchIterCase && !nextInRowSheetIterCase;
         }
     }
 

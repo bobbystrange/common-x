@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.dreamcat.common.bean.BeanCopyUtil;
+import org.dreamcat.common.x.excel.content.ExcelBooleanContent;
 import org.dreamcat.common.x.excel.content.ExcelNumericContent;
 import org.dreamcat.common.x.excel.content.ExcelStringContent;
 import org.dreamcat.common.x.excel.content.IExcelContent;
@@ -35,11 +36,25 @@ public class ExcelBuilder {
         return new WorkbookTerm(book);
     }
 
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
+
+    public static IExcelContent term(Object value) {
+        if (value instanceof Number) {
+            Number number = (Number) value;
+            return new ExcelNumericContent(number.doubleValue());
+        } else if (value instanceof Boolean) {
+            Boolean bool = (Boolean) value;
+            return new ExcelBooleanContent(bool);
+        } else if (value instanceof IExcelContent) {
+            return (IExcelContent) value;
+        } else {
+            return new ExcelStringContent(value == null ? "" : value.toString());
+        }
+    }
+
     public static IExcelContent term(String string) {
         return new ExcelStringContent(string);
     }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     public static IExcelContent term(double number) {
         return new ExcelNumericContent(number);

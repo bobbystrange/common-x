@@ -11,6 +11,26 @@ import java.util.List;
  */
 public class ExcelWorkbookTest {
 
+    public static void printCells(IExcelSheet sheet) {
+        for (IExcelCell cell : sheet) {
+            System.out.printf("[%d, %d, %d, %d] %s\n",
+                    cell.getRowIndex(), cell.getColumnIndex(),
+                    cell.getRowSpan(), cell.getColumnSpan(),
+                    cell.getContent());
+        }
+    }
+
+    public static void printVerbose(IExcelSheet sheet) {
+        for (IExcelCell cell : sheet) {
+            System.out.printf("[%d, %d, %d, %d] %s\n%s\n%s\n\n",
+                    cell.getRowIndex(), cell.getColumnIndex(),
+                    cell.getRowSpan(), cell.getColumnSpan(),
+                    cell.getContent(),
+                    cell.getFont(), cell.getStyle()
+            );
+        }
+    }
+
     @Test
     public void exportExcelWorkbook() throws Exception {
         ExcelSheet sheet = new ExcelSheet("sheet1");
@@ -35,20 +55,7 @@ public class ExcelWorkbookTest {
 
         List<ExcelSheet> sheets = book.getSheets();
         for (ExcelSheet sheet : sheets) {
-            List<IExcelCell> cells = sheet.getCells();
-
-            System.out.printf("Sheet: \t%s (%d cells)\n", sheet.getName(), cells.size());
-            for (IExcelCell cell : cells) {
-                System.out.printf("Cell: \t[%d, %d, %d, %d] %s\n",
-                        cell.getRowIndex(),
-                        cell.getColumnIndex(),
-                        cell.getRowSpan(),
-                        cell.getColumnSpan(),
-                        cell.getContent());
-                // System.out.println("      \t" + cell.getHyperLink());
-                // System.out.println("      \t" + cell.getFont());
-                // System.out.println("      \t" + cell.getStyle());
-            }
+            printCells(sheet);
         }
 
         book.writeTo("/Users/tuke/Downloads/book2.xlsx");

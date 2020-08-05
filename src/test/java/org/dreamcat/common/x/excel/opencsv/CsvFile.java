@@ -1,4 +1,4 @@
-package org.dreamcat.common.x.excel.file;
+package org.dreamcat.common.x.excel.opencsv;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
