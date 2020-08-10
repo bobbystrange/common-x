@@ -1,6 +1,7 @@
 package org.dreamcat.common.x.excel.map;
 
 import lombok.Data;
+import org.dreamcat.common.util.ReflectUtil;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
@@ -10,12 +11,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Create by tuke on 2020/7/24
  */
 @Data
+@SuppressWarnings("rawtypes")
 public class XlsMeta {
     // internal use only, for ignored filed
     public static final Cell IGNORED_CELL = new Cell();
@@ -35,11 +38,6 @@ public class XlsMeta {
                 .collect(Collectors.toList());
     }
 
-    public boolean isExpanded(int index) {
-        Cell cell = this.cells.get(index);
-        return cell != null && cell.expanded;
-    }
-
     public Cell computeCell(int index) {
         Cell cell = cells.get(index);
         if (cell != null && cell.equals(XlsMeta.IGNORED_CELL)) return null;
@@ -57,12 +55,13 @@ public class XlsMeta {
 
     @SuppressWarnings("rawtypes")
     public List getFieldValues(Object row) {
-        Field[] fields = row.getClass().getDeclaredFields();
+        List<Field> fields = new ArrayList<>();
+        ReflectUtil.retrieveFields(row.getClass(), fields);
         List<XlsMeta.Cell> sortedCells = sortCells(cells);
 
         List<Object> fieldValues = new ArrayList<>();
         for (XlsMeta.Cell cell : sortedCells) {
-            Field field = fields[cell.fieldIndex];
+            Field field = fields.get(cell.fieldIndex);
             field.setAccessible(true);
             Object value;
             try {
@@ -89,6 +88,10 @@ public class XlsMeta {
         // only not null if expended on a array field
         Class<?> expandedType;
         XlsMeta expandedMeta;
+
+        // format
+        Function serializer;
+        Function deserializer;
 
         public void fillDefault(int fieldIndex) {
             this.fieldIndex = fieldIndex;

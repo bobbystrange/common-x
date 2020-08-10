@@ -2,7 +2,6 @@ ext {
     javaMailVersion = "1.6.2"
     compressVersion = "1.18"
     poiVersion = "4.0.1"
-    opencsvVersion = "5.1"
 }
 
 dependencies {
@@ -14,8 +13,6 @@ dependencies {
     // MS Office
     implementation "org.apache.poi:poi:${poiVersion}"
     implementation "org.apache.poi:poi-ooxml:${poiVersion}"
-    // csv
-    implementation "com.opencsv:opencsv:${opencsvVersion}"
 
     implementation "com.sun.mail:javax.mail:$javaMailVersion"
     implementation "org.apache.commons:commons-compress:$compressVersion"

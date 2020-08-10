@@ -181,7 +181,11 @@ public class AnnotationRowSheet implements IExcelSheet {
 
             if (scalar != null) {
                 // prepare data
-                setContent(scalar);
+                if (cell.serializer == null) {
+                    setContent(scalar);
+                } else {
+                    setContent(cell.serializer.apply(scalar));
+                }
                 rowIndex = 0;
                 columnIndex = offset;
                 rowSpan = maxRowSpan;
@@ -200,7 +204,11 @@ public class AnnotationRowSheet implements IExcelSheet {
 
             // in cell case scheme
             if (scalarArray != null) {
-                setContent(scalarArray.get(scalarArrayIndex));
+                if (cell.serializer == null) {
+                    setContent(scalarArray.get(scalarArrayIndex));
+                } else {
+                    setContent(cell.serializer.apply(scalarArray.get(scalarArrayIndex)));
+                }
                 rowIndex = scalarArrayIndex;
                 columnIndex = offset;
                 rowSpan = 1;
@@ -224,7 +232,11 @@ public class AnnotationRowSheet implements IExcelSheet {
             if (vector != null) {
                 XlsMeta.Cell subCell = subMeta.cells.get(subIndexes.get(vectorIndex));
 
-                setContent(vector.get(vectorIndex));
+                if (cell.serializer == null) {
+                    setContent(vector.get(vectorIndex));
+                } else {
+                    setContent(cell.serializer.apply(vector.get(vectorIndex)));
+                }
                 rowIndex = 0;
                 columnIndex = offset++;
                 rowSpan = maxRowSpan;
@@ -244,7 +256,11 @@ public class AnnotationRowSheet implements IExcelSheet {
             }
 
             XlsMeta.Cell subCell = subMeta.cells.get(indexes.get(vectorArrayColumnIndex));
-            setContent(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex));
+            if (cell.serializer == null) {
+                setContent(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex));
+            } else {
+                setContent(cell.serializer.apply(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex)));
+            }
             rowIndex = vectorArrayIndex;
             columnIndex = offset + vectorArrayColumnIndex;
             rowSpan = 1;

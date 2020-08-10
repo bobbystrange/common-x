@@ -1,7 +1,9 @@
 package org.dreamcat.common.x.excel.map;
 
+import org.dreamcat.common.util.ReflectUtil;
 import org.dreamcat.common.x.excel.annotation.XlsCell;
 import org.dreamcat.common.x.excel.annotation.XlsFont;
+import org.dreamcat.common.x.excel.annotation.XlsFormat;
 import org.dreamcat.common.x.excel.annotation.XlsRichStyle;
 import org.dreamcat.common.x.excel.annotation.XlsSheet;
 import org.dreamcat.common.x.excel.annotation.XlsStyle;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Create by tuke on 2020/7/22
@@ -40,12 +43,14 @@ public class XlsBuilder {
         parseXlsFont(metadata, clazz);
         parseXlsStyle(metadata, clazz);
 
-        Field[] fields = clazz.getDeclaredFields();
+
+        List<Field> fields = ReflectUtil.retrieveFields(clazz);
         int index = 0;
         for (Field field : fields) {
             parseXlsCell(metadata, clazz, object, field, index, onlyAnnotated, enableExpanded, requiredTypesInList);
             parseXlsFont(metadata, field, index);
             parseXlsStyle(metadata, field, index);
+            parseXlsFormat(metadata, field, index);
             index++;
         }
 
@@ -95,6 +100,29 @@ public class XlsBuilder {
         XlsMeta.Cell cell = metadata.computeCell(index);
         ExcelStyle style = ExcelStyle.from(xlsStyle, xlsRichStyle);
         cell.setStyle(style);
+    }
+
+    private static void parseXlsFormat(XlsMeta metadata, Field field, int index) {
+        XlsFormat xlsFormat = field.getDeclaredAnnotation(XlsFormat.class);
+        if (xlsFormat == null) return;
+
+        XlsMeta.Cell cell = metadata.computeCell(index);
+        Class serializer = xlsFormat.serializer();
+        Class deserializer = xlsFormat.deserializer();
+        if (serializer != XlsFormat.None.class) {
+            try {
+                cell.serializer = (Function) serializer.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        if (deserializer != XlsFormat.None.class) {
+            try {
+                cell.deserializer = (Function) deserializer.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
     }
 
     // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====

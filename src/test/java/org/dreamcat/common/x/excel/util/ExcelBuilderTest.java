@@ -7,7 +7,7 @@ import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
 import org.dreamcat.common.x.excel.core.ExcelRichCell;
 import org.dreamcat.common.x.excel.core.ExcelSheet;
 import org.dreamcat.common.x.excel.core.ExcelWorkbook;
-import org.dreamcat.common.x.excel.core.IExcelCell;
+import org.dreamcat.common.x.excel.core.ExcelWorkbookTest;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelRichStyle;
 import org.junit.Test;
@@ -104,15 +104,7 @@ public class ExcelBuilderTest {
     @Test
     public void test() throws Exception {
         ExcelSheet headerSheet = headerSheet();
-
-        for (IExcelCell cell : headerSheet) {
-            System.out.printf("[%d, %d, %d, %d] %s\n%s\n%s\n\n",
-                    cell.getRowIndex(), cell.getColumnIndex(),
-                    cell.getRowSpan(), cell.getColumnSpan(),
-                    cell.getContent(),
-                    cell.getFont(), cell.getStyle()
-            );
-        }
+        ExcelWorkbookTest.printVerbose(headerSheet);
 
         // headerSheet.setWriteCallback(new LoggingWriteCallback());
         ExcelWorkbook<ExcelSheet> book = workbook()
