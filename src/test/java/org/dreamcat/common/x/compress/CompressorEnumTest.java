@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.dreamcat.common.util.PrintUtil.print;
-import static org.dreamcat.common.util.PrintUtil.println;
+import static org.dreamcat.common.util.FormatUtil.print;
+import static org.dreamcat.common.util.FormatUtil.println;
 
 /**
  * Create by tuke on 2020/4/7

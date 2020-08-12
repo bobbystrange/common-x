@@ -1,7 +1,7 @@
 package org.dreamcat.common.x.excel.map;
 
 import lombok.Getter;
-import org.dreamcat.common.bean.BeanListUtil;
+import org.dreamcat.common.bean.BeanUtil;
 import org.dreamcat.common.x.excel.content.ExcelUnionContent;
 import org.dreamcat.common.x.excel.content.IExcelContent;
 import org.dreamcat.common.x.excel.core.IExcelCell;
@@ -212,7 +212,7 @@ public class SimpleListSheet implements IExcelSheet {
                 columnSize = row.size();
                 nextCell = null;
             } else {
-                row = BeanListUtil.toList(rawRow);
+                row = BeanUtil.toList(rawRow);
                 columnSize = row.size();
                 nextCell = null;
             }

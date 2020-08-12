@@ -61,7 +61,7 @@ public class MakeClass {
         return this;
     }
 
-    public MakeClass iface(Class<?> interfaceClass) throws NotFoundException {
+    public MakeClass addInterface(Class<?> interfaceClass) throws NotFoundException {
         cc.addInterface(pool.get(interfaceClass.getCanonicalName()));
         return this;
     }
@@ -147,7 +147,7 @@ public class MakeClass {
 
         // add getter & setter
         String prefix = type.equals(boolean.class) ? "is" : "get";
-        String capitalFieldName = StringUtil.toCapital(name);
+        String capitalFieldName = StringUtil.toCapitalCase(name);
         String getter = String.format("public %s %s%s(){ return this.%s; }",
                 literalType, prefix, capitalFieldName, name);
         String setter = String.format("public %s set%s(%s value){ this.%s = value; }",

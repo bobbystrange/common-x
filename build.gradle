@@ -17,8 +17,10 @@ dependencies {
     implementation "com.sun.mail:javax.mail:$javaMailVersion"
     implementation "org.apache.commons:commons-compress:$compressVersion"
 
-    testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
+    // testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
     testImplementation "junit:junit:$junitVersion"
 
+    testImplementation 'org.springframework:spring-beans:5.2.3.RELEASE'
+    testImplementation "com.opencsv:opencsv:5.1"
     testImplementation "com.alibaba:easyexcel:2.2.6"
 }

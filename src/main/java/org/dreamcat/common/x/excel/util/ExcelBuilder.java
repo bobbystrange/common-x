@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.dreamcat.common.bean.BeanCopyUtil;
+import org.dreamcat.common.bean.BeanUtil;
 import org.dreamcat.common.x.excel.content.ExcelBooleanContent;
 import org.dreamcat.common.x.excel.content.ExcelNumericContent;
 import org.dreamcat.common.x.excel.content.ExcelStringContent;
@@ -365,7 +365,7 @@ public class ExcelBuilder {
                     richStyle = new ExcelRichStyle();
                 } else {
                     // Todo replace BeanCopyUtil with asm
-                    richStyle = BeanCopyUtil.copy(style, ExcelRichStyle.class);
+                    richStyle = BeanUtil.copy(style, ExcelRichStyle.class);
                     style = null;
                 }
             }

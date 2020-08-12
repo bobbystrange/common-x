@@ -1,6 +1,6 @@
 package org.dreamcat.common.x.excel.benchmark;
 
-import org.dreamcat.common.bean.BeanListUtil;
+import org.dreamcat.common.bean.BeanUtil;
 import org.dreamcat.common.core.Timeit;
 import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
 import org.dreamcat.common.x.excel.core.ExcelCell;
@@ -85,7 +85,7 @@ public class AnnotationListSheetSpeedTest {
         ExcelSheet sheet = new ExcelSheet("Sheet One");
         int ri = 0;
         for (Pojo pojo : pojoList) {
-            List<Object> values = BeanListUtil.toList(pojo);
+            List<Object> values = BeanUtil.toList(pojo);
             Integer s = (Integer) values.get(0);
             List<Double> sa = (List<Double>) values.get(1);
             Item v = (Item) values.get(2);
@@ -100,13 +100,13 @@ public class AnnotationListSheetSpeedTest {
                 sheet.getCells().add(new ExcelCell(term(n), k++, 1, 1, 1));
             }
 
-            List<Object> vi = BeanListUtil.toList(v);
+            List<Object> vi = BeanUtil.toList(v);
             sheet.getCells().add(new ExcelCell(term(vi.get(0)), ri, 2, maxRowSpan, 1));
             sheet.getCells().add(new ExcelCell(term(vi.get(1)), ri, 3, maxRowSpan, 1));
 
             k = ri;
             for (Item a : va) {
-                List<Object> vai = BeanListUtil.toList(a);
+                List<Object> vai = BeanUtil.toList(a);
                 sheet.getCells().add(new ExcelCell(term(vai.get(0)), k, 4, 1, 1));
                 sheet.getCells().add(new ExcelCell(term(vai.get(1)), k++, 5, 1, 1));
             }
