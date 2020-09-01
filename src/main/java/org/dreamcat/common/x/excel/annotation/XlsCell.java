@@ -26,12 +26,15 @@ public @interface XlsCell {
 
     boolean ignored() default false;
 
-    //  column index
-    int index() default -1;
+    //  filed index
+    int fieldIndex() default -1;
 
     //  column span
     int span() default 1;
 
     // expand
     boolean expanded() default false;
+
+    // component type in list/array
+    Class<?> expandedType() default Void.class;
 }

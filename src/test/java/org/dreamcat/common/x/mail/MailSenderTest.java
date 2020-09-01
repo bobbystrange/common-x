@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
-import static org.dreamcat.common.util.FormatUtil.println;
 
 /**
  * Create by tuke on 2020/5/1
@@ -22,7 +21,7 @@ public class MailSenderTest {
     @Before
     public void init() throws IOException {
         File localFile = new File("../local.properties");
-        println("Loading properties from", localFile.getAbsolutePath());
+        System.out.println("Loading properties from" + "," + localFile.getAbsolutePath());
 
         Properties properties = new Properties();
         properties.load(new FileReader(localFile));

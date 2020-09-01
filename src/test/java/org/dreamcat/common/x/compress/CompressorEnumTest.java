@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.dreamcat.common.util.FormatUtil.print;
-import static org.dreamcat.common.util.FormatUtil.println;
 
 /**
  * Create by tuke on 2020/4/7
@@ -23,12 +21,12 @@ public class CompressorEnumTest {
         byte[] compressed = GzipUtil.compress(data);
         byte[] uncompressed = GzipUtil.uncompress(compressed);
 
-        println(data.length, new String(data));
-        println(compressed.length, ByteUtil.hex(compressed));
+        System.out.println(data.length + "," + new String(data));
+        System.out.println(compressed.length + "," + ByteUtil.hex(compressed));
 
         //println(compressed.length, new String(compressed));
         //println(compressed.length);
-        println(uncompressed.length, new String(uncompressed));
+        System.out.println(uncompressed.length + "," + new String(uncompressed));
     }
 
     @Test
@@ -42,13 +40,13 @@ public class CompressorEnumTest {
 
         for (int i = 1; i < 1000; i++) {
             byte[] data = RandomUtil.choose72(i).getBytes();
-            print(i + "\t");
+            System.out.print(i + "\t");
             for (ThrowableFunction<byte[], byte[]> fn : fns) {
                 byte[] compressed = fn.apply(data);
                 //byte[] uncompressed = SnappyUtil.uncompress(compressed);
-                print(compressed.length + " ");
+                System.out.print(compressed.length + " ");
             }
-            print("\n");
+            System.out.print("\n");
         }
     }
 

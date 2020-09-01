@@ -17,6 +17,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.dreamcat.common.bean.BeanFormatUtil.pretty;
 import static org.dreamcat.common.util.RandomUtil.*;
 
 /**
@@ -38,8 +39,8 @@ public class XlsMetaTest {
 
     @Test
     public void test() {
-        XlsMeta metadata = XlsBuilder.parse(Pojo.class, true, Item.class);
-        System.out.println(metadata);
+        XlsMeta metadata = XlsMeta.parse(Pojo.class, true);
+        System.out.println(pretty(metadata));
     }
 
     @Data
@@ -65,7 +66,7 @@ public class XlsMetaTest {
                 borderBottom = BorderStyle.DASH_DOT_DOT,
                 borderLeft = BorderStyle.THICK)
         @XlsFont(name = "微软雅黑", height = 16, bold = true, italic = true)
-        @XlsCell(expanded = true)
+        @XlsCell(expanded = true, expandedType = Item.class)
         List<Item> VA;
     }
 

@@ -6,11 +6,11 @@ import lombok.Setter;
 import org.dreamcat.common.bean.BeanUtil;
 import org.dreamcat.common.core.Timeit;
 import org.dreamcat.common.util.RandomUtil;
-import org.dreamcat.common.util.ReflectUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -67,14 +67,7 @@ public class BeanMapUtilTest {
 
     @Test
     public void toMap() {
-        Map<String, Class<?>> map = new HashMap<>();
-        map.put("a", int.class);
-        map.put("b", Double.class);
-        map.put("c", String.class);
-        Class<?> clazz = BeanGeneratorUtil.generateClass(map);
-        ReflectUtil.retrieveFields(clazz).forEach(System.out::println);
-        System.out.println();
-
+        Class<?> clazz = BeanGeneratorUtilTest.newClass();
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("a", 1);
         objectMap.put("b", 3.14);
@@ -92,6 +85,20 @@ public class BeanMapUtilTest {
 
         objectMap = BeanUtil.toMap(o);
         System.out.println(pretty(objectMap));
+    }
+
+    @Test
+    public void toList() {
+        C c = newC();
+        System.out.println(pretty(c));
+        System.out.println();
+
+        List<Object> list = BeanMapUtil.toList(c);
+        System.out.println(pretty(list));
+        System.out.println();
+
+        Map<String, Object> map = BeanMapUtil.toMap(c);
+        System.out.println(pretty(map));
     }
 
     @Getter

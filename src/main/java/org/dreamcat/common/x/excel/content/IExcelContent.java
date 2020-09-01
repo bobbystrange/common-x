@@ -24,6 +24,31 @@ public interface IExcelContent {
         }
     }
 
+    static Object valueOf(Cell cell) {
+        CellType type = cell.getCellType();
+        switch (type) {
+            case STRING:
+                // string
+                return cell.getStringCellValue();
+            case NUMERIC:
+                // double
+                double value = cell.getNumericCellValue();
+                long round = Math.round(value);
+                if (value == (double) round) {
+                    return round;
+                }
+                return value;
+            case BOOLEAN:
+                // boolean
+                return cell.getBooleanCellValue();
+            case FORMULA:
+                // string
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+
     void fill(Cell cell);
 
 }

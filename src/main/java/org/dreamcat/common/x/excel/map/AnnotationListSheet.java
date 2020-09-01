@@ -18,7 +18,7 @@ import java.util.List;
  * Create by tuke on 2020/7/26
  * <p>
  * It is a very tricky implementation to translate annotated beans to sheet interface,
- * which simplifies the API usage without sacrificing performance
+ * which simplifies the API usage without sacrificing memory
  * Note that it is thread-unsafe in the iteration however
  */
 @Getter

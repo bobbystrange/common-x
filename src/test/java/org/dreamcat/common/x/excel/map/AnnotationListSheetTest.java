@@ -1,5 +1,6 @@
 package org.dreamcat.common.x.excel.map;
 
+import org.dreamcat.common.x.excel.callback.AutoWidthWriteCallback;
 import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
 import org.dreamcat.common.x.excel.core.ExcelWorkbook;
 import org.dreamcat.common.x.excel.util.ExcelBuilderTest;
@@ -41,7 +42,9 @@ public class AnnotationListSheetTest {
         // body + head + body + head + body
         AnnotationListSheet sheet1 = new AnnotationListSheet("Sheet One");
         sheet1.setAnnotationStyle(true);
-        sheet1.setWriteCallback(new FitWidthWriteCallback());
+        // sheet1.setWriteCallback(new FitWidthWriteCallback());
+        sheet1.setWriteCallback(new AutoWidthWriteCallback());
+
         for (int i = 0; i < 6; i++) sheet1.add(XlsMetaTest.newPojo());
         for (int i = 0; i < 6; i++) sheet1.add(ExcelBuilderTest.headerSheet());
         for (int i = 0; i < 6; i++) sheet1.add(XlsMetaTest.newPojo());

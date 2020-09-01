@@ -24,9 +24,13 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     List<T> getSheets();
 
-    ExcelStyle getDefaultStyle();
+    default ExcelStyle getDefaultStyle() {
+        return null;
+    }
 
-    ExcelFont getDefaultFont();
+    default ExcelFont getDefaultFont() {
+        return null;
+    }
 
     IExcelWorkbook<T> add(T sheet);
 
@@ -69,9 +73,9 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
         }
     }
 
-    default void writeTo(OutputStream ostream) throws IOException {
+    default void writeTo(OutputStream output) throws IOException {
         try (Workbook workbook = toWorkbook()) {
-            workbook.write(ostream);
+            workbook.write(output);
         }
     }
 
@@ -85,9 +89,9 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
         }
     }
 
-    default void writeToWithBigGrid(OutputStream ostream) throws IOException {
+    default void writeToWithBigGrid(OutputStream output) throws IOException {
         try (Workbook workbook = toWorkbookWithBigGrid()) {
-            workbook.write(ostream);
+            workbook.write(output);
         }
     }
 
@@ -101,9 +105,9 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
         }
     }
 
-    default void writeTo2003(OutputStream ostream) throws IOException {
+    default void writeTo2003(OutputStream output) throws IOException {
         try (Workbook workbook = toWorkbook2003()) {
-            workbook.write(ostream);
+            workbook.write(output);
         }
     }
 

@@ -28,6 +28,8 @@ public class ExcelSheet implements IExcelSheet {
     private final String name;
     private final List<IExcelCell> cells;
     private IExcelWriteCallback writeCallback;
+    // not load styles in from case
+    private boolean noStyle;
 
     public ExcelSheet(String name) {
         this.name = name;
@@ -35,7 +37,12 @@ public class ExcelSheet implements IExcelSheet {
     }
 
     public static ExcelSheet from(Workbook workbook, Sheet sheet) {
+        return from(workbook, sheet, true);
+    }
+
+    public static ExcelSheet from(Workbook workbook, Sheet sheet, boolean noStyle) {
         ExcelSheet excelSheet = new ExcelSheet(sheet.getSheetName());
+        excelSheet.setNoStyle(noStyle);
 
         List<IExcelCell> cells = excelSheet.getCells();
         int rowNum = sheet.getPhysicalNumberOfRows();
@@ -52,8 +59,14 @@ public class ExcelSheet implements IExcelSheet {
                 Cell cell = row.getCell(j);
                 if (cell == null) continue;
                 IExcelContent content = IExcelContent.from(cell);
-
                 ExcelCell excelCell = null;
+
+                if (noStyle) {
+                    excelCell = new ExcelCell(content, i, j);
+                    cells.add(excelCell);
+                    continue;
+                }
+
                 Hyperlink hyperlink = cell.getHyperlink();
                 CellStyle style = cell.getCellStyle();
 

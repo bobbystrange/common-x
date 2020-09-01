@@ -10,7 +10,7 @@ import java.util.function.Function;
 /**
  * Create by tuke on 2020/8/10
  */
-@Target({ElementType.FIELD, ElementType.TYPE})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface CsvFormat {

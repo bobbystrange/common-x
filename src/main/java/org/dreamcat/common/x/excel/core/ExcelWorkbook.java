@@ -13,8 +13,8 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,22 +27,28 @@ public class ExcelWorkbook<T extends IExcelSheet> implements IExcelWorkbook<T> {
     private ExcelFont defaultFont;
 
     public ExcelWorkbook() {
-        this.sheets = new LinkedList<>();
+        this.sheets = new ArrayList<>();
     }
 
     public static ExcelWorkbook<ExcelSheet> from(File file) throws IOException, InvalidFormatException {
-        return from(new XSSFWorkbook(file));
+        try (Workbook workbook = new XSSFWorkbook(file)) {
+            return from(workbook);
+        }
     }
 
     public static ExcelWorkbook<ExcelSheet> fromBigGrid(File file) throws IOException, InvalidFormatException {
-        return from(new SXSSFWorkbook(new XSSFWorkbook(file)));
+        try (Workbook workbook = new SXSSFWorkbook(new XSSFWorkbook(file))) {
+            return from(workbook);
+        }
     }
 
     public static ExcelWorkbook<ExcelSheet> from2003(File file) throws IOException {
-        return from(new HSSFWorkbook(new POIFSFileSystem(file, true)));
+        try (Workbook workbook = new HSSFWorkbook(new POIFSFileSystem(file, true))) {
+            return from(workbook);
+        }
     }
 
-    public static <T extends Workbook> ExcelWorkbook<ExcelSheet> from(T workbook) {
+    public static ExcelWorkbook<ExcelSheet> from(Workbook workbook) {
         ExcelWorkbook<ExcelSheet> book = new ExcelWorkbook<>();
 
         int sheetNum = workbook.getNumberOfSheets();
@@ -59,7 +65,7 @@ public class ExcelWorkbook<T extends IExcelSheet> implements IExcelWorkbook<T> {
     }
 
     @Override
-    public IExcelWorkbook<T> add(T sheet) {
+    public ExcelWorkbook<T> add(T sheet) {
         sheets.add(sheet);
         return this;
     }

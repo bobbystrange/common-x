@@ -10,6 +10,7 @@ import org.dreamcat.common.x.excel.core.IExcelSheet;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,18 +19,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Create by tuke on 2020/7/25
+ * Create by tuke on 2020/8/19
  */
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class AnnotationRowSheet implements IExcelSheet {
-    private final Map<Class, MetaCacheLine> metaMap = new HashMap<>();
+public class DynamicRowSheet implements IExcelSheet {
+    private final Map<Class, AnnotationRowSheet.MetaCacheLine> metaMap = new HashMap<>();
     private String name;
     private Object scheme;
     private XlsMeta meta;
     private List<Integer> indexes;
 
-    public AnnotationRowSheet(Object scheme) {
+    public DynamicRowSheet(Object scheme) {
         reset(scheme);
     }
 
@@ -53,7 +54,7 @@ public class AnnotationRowSheet implements IExcelSheet {
         this.meta = XlsMeta.parse(clazz);
         checkMetaName(clazz);
         this.indexes = meta.getFieldIndexes();
-        this.metaMap.put(clazz, new MetaCacheLine(meta, indexes));
+        this.metaMap.put(clazz, new AnnotationRowSheet.MetaCacheLine(meta, indexes));
 
         this.name = meta.name;
         this.scheme = scheme;
@@ -104,6 +105,16 @@ public class AnnotationRowSheet implements IExcelSheet {
         int vectorArrayColumnSize;
         int vectorArrayColumnIndex;
 
+        List dynamic;
+        int dynamicSize;
+        int dynamicIndex;
+
+        List<List> dynamicArray;
+        int dynamicArraySize;
+        int dynamicArrayIndex;
+        int dynamicArrayColumnSize;
+        int dynamicArrayColumnIndex;
+
         int rowIndex;
         int columnIndex;
         int rowSpan;
@@ -116,7 +127,7 @@ public class AnnotationRowSheet implements IExcelSheet {
         }
 
         public void reset(Object scheme) {
-            AnnotationRowSheet.this.reset(scheme);
+            DynamicRowSheet.this.reset(scheme);
 
             subMeta = null;
             subIndexes = null;
@@ -136,6 +147,16 @@ public class AnnotationRowSheet implements IExcelSheet {
             vectorArrayIndex = 0;
             vectorArrayColumnSize = 0;
             vectorArrayColumnIndex = 0;
+
+            dynamic = null;
+            dynamicSize = 0;
+            dynamicIndex = 0;
+
+            dynamicArray = null;
+            dynamicArraySize = 0;
+            dynamicArrayIndex = 0;
+            dynamicArrayColumnSize = 0;
+            dynamicArrayColumnIndex = 0;
 
             init();
         }
@@ -172,7 +193,9 @@ public class AnnotationRowSheet implements IExcelSheet {
             return scalar != null ||
                     scalarArray != null ||
                     vector != null ||
-                    vectorArray != null;
+                    vectorArray != null ||
+                    dynamic != null ||
+                    dynamicArray != null;
         }
 
         @Override
@@ -255,6 +278,61 @@ public class AnnotationRowSheet implements IExcelSheet {
                 return this;
             }
 
+            if (dynamic != null) {
+                if (cell.serializer == null) {
+                    setContent(dynamic.get(dynamicIndex));
+                } else {
+                    setContent(cell.serializer.apply(dynamic.get(dynamicIndex)));
+                }
+                rowIndex = 0;
+                columnIndex = offset++;
+                rowSpan = maxRowSpan;
+                columnSpan = cell.span;
+                fillFontAndStyle(cell, cell);
+
+                // move
+                dynamicIndex++;
+                if (dynamicIndex >= dynamicSize) {
+                    dynamic = null;
+                    schemeIndex++;
+                    if (schemeIndex < schemeSize) {
+                        move();
+                    }
+                }
+                return this;
+            }
+
+            if (dynamicArray != null) {
+                if (cell.serializer == null) {
+                    setContent(dynamicArray.get(dynamicArrayIndex).get(dynamicArrayColumnIndex));
+                } else {
+                    setContent(cell.serializer.apply(dynamicArray.get(dynamicArrayIndex).get(dynamicArrayColumnIndex)));
+                }
+                rowIndex = dynamicArrayIndex;
+                columnIndex = offset + dynamicArrayColumnIndex;
+                rowSpan = 1;
+                columnSpan = cell.span;
+                fillFontAndStyle(cell, cell);
+
+                // move
+                dynamicArrayColumnIndex++;
+                if (dynamicArrayColumnIndex >= dynamicArrayColumnSize) {
+                    dynamicArrayColumnIndex = 0;
+                    dynamicArrayIndex++;
+                    if (dynamicArrayIndex >= dynamicArraySize) {
+                        dynamicArray = null;
+                        schemeIndex++;
+                        if (schemeIndex < schemeSize) {
+                            move();
+                        }
+                    } else {
+                        dynamicArrayColumnSize = dynamicArray.get(dynamicArrayIndex).size();
+                    }
+                }
+
+                return this;
+            }
+
             XlsMeta.Cell subCell = subMeta.cells.get(indexes.get(vectorArrayColumnIndex));
             if (cell.serializer == null) {
                 setContent(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex));
@@ -294,29 +372,66 @@ public class AnnotationRowSheet implements IExcelSheet {
             if (!cell.expanded) {
                 // s
                 if (isNotListOrArray(fieldValue)) {
+                    if (fieldValue instanceof Map) {
+                        Map map = (Map) fieldValue;
+                        int mapSize = map.size();
+                        ;
+                        if (mapSize == 0) {
+                            throw new IllegalArgumentException("empty map field value in " + scheme.getClass());
+                        }
+                        dynamic = new ArrayList(map.values());
+
+                        dynamicSize = mapSize;
+                        dynamicIndex = 0;
+                        return;
+                    }
                     scalar = fieldValue;
                     return;
                 }
 
-                // sa
-                scalarArray = cast(fieldValue);
-                scalarArraySize = scalarArray.size();
-                if (scalarArraySize == 0) {
+                List array = cast(fieldValue);
+                int arraySize = array.size();
+                if (arraySize == 0) {
                     throw new IllegalArgumentException("empty list/array field value in " + scheme.getClass());
                 }
+
+                if (array.get(0) instanceof Map) {
+                    List<Map> mapList = (List<Map>) array;
+
+                    dynamicArraySize = arraySize;
+                    dynamicArrayIndex = 0;
+
+                    Map dynamicArrayFirstMap = mapList.get(0);
+                    int mapSize = dynamicArrayFirstMap.size();
+                    if (mapSize == 0) {
+                        throw new IllegalArgumentException("empty map in list/array field value on " + scheme.getClass());
+                    }
+
+                    dynamicArray = new ArrayList<>(mapSize);
+                    for (Map map : mapList) {
+                        dynamicArray.add(new ArrayList<>(map.values()));
+                    }
+                    dynamicArrayColumnSize = mapSize;
+                    dynamicArrayColumnIndex = 0;
+                    return;
+                }
+
+                // sa
+                scalarArray = array;
+                scalarArraySize = arraySize;
                 scalarArrayIndex = 0;
                 return;
             }
 
             // v
             if (isNotListOrArray(fieldValue)) {
-                MetaCacheLine cacheLine = metaMap.computeIfAbsent(
+                AnnotationRowSheet.MetaCacheLine cacheLine = metaMap.computeIfAbsent(
                         fieldValue.getClass(), c -> {
                             XlsMeta meta = XlsMeta.parse(c, false);
                             if (meta == null) {
                                 throw new IllegalArgumentException("no @XlsSheet annotation on " + c);
                             }
-                            return new MetaCacheLine(meta, meta.getFieldIndexes());
+                            return new AnnotationRowSheet.MetaCacheLine(meta, meta.getFieldIndexes());
                         });
                 subMeta = cacheLine.meta;
                 subIndexes = cacheLine.indexes;
@@ -331,19 +446,22 @@ public class AnnotationRowSheet implements IExcelSheet {
             if (rectangle.isEmpty()) {
                 throw new IllegalArgumentException("empty list/array field value in " + scheme.getClass());
             }
-            MetaCacheLine cacheLine = metaMap.computeIfAbsent(
+            AnnotationRowSheet.MetaCacheLine cacheLine = metaMap.computeIfAbsent(
                     rectangle.get(0).getClass(), c -> {
                         XlsMeta meta = XlsMeta.parse(c, false);
                         if (meta == null) {
                             throw new IllegalArgumentException("no @XlsSheet annotation on " + c);
                         }
-                        return new MetaCacheLine(meta, meta.getFieldIndexes());
+                        return new AnnotationRowSheet.MetaCacheLine(meta, meta.getFieldIndexes());
                     });
             subMeta = cacheLine.meta;
             subIndexes = cacheLine.indexes;
 
             vectorArray = (List<List>) rectangle.stream().map(subMeta::getFieldValues).collect(Collectors.toList());
             vectorArraySize = vectorArray.size();
+            if (vectorArraySize == 0) {
+                throw new IllegalArgumentException("empty size element on " + scheme.getClass());
+            }
             vectorArrayIndex = 0;
             vectorArrayColumnSize = vectorArray.get(0).size();
             vectorArrayColumnIndex = 0;
