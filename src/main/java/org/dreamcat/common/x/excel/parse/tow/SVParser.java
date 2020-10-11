@@ -26,6 +26,7 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
     private int headerIndex = 0;
     // tow level sequence column index
     private final int scalarSequenceIndex;
+    // vector locator, priority: scalarMapSize > vectorFirstHeaderName > vectorFirstHeaderRegexp
     private int scalarMapSize = -1;
     private String vectorFirstHeaderName;
     private String vectorFirstHeaderRegexp;

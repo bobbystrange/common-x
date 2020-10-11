@@ -14,27 +14,7 @@ import java.util.function.Function;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface XlsParse {
-    /**
-     * field locator
-     * if name unmatched, then use regexp
-     * also unmatched, then use index
-     *
-     * @return exactly matches field name
-     */
-    String name() default "";
 
-    String regexp() default "";
+    Class<? extends Function<String, Object>> deserializer();
 
-    boolean ignored() default false;
-
-    boolean expanded() default false;
-
-    Class<? extends Function<String, Object>> deserializer() default NoneDeserializer.class;
-
-    class NoneDeserializer implements Function<String, Object> {
-        @Override
-        public Object apply(String o) {
-            throw new IllegalStateException("this method may not be invoked");
-        }
-    }
 }
