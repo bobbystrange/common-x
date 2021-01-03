@@ -7,7 +7,6 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.x.asm.BeanCopierUtil;
 import org.dreamcat.common.x.excel.content.ExcelBooleanContent;
 import org.dreamcat.common.x.excel.content.ExcelNumericContent;
@@ -28,7 +27,7 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
  */
 public final class ExcelBuilder {
 
-    private ExcelBuilder(){
+    private ExcelBuilder() {
     }
 
     public static SheetTerm sheet(String sheetName) {
@@ -70,12 +69,14 @@ public final class ExcelBuilder {
 
     // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
-    public static ExcelCell term(String string, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+    public static ExcelCell term(String string, int rowIndex, int columnIndex, int rowSpan,
+            int columnSpan) {
         return new ExcelCell(term(string), rowIndex, columnIndex, rowSpan, columnSpan);
     }
 
     @RequiredArgsConstructor
     public static class SheetTerm {
+
         private final ExcelSheet sheet;
 
         public ExcelSheet finishSheet() {
@@ -95,7 +96,8 @@ public final class ExcelBuilder {
             return cell(term(number), rowIndex, columnIndex);
         }
 
-        public SheetTerm cell(double number, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+        public SheetTerm cell(double number, int rowIndex, int columnIndex, int rowSpan,
+                int columnSpan) {
             return cell(term(number), rowIndex, columnIndex, rowSpan, columnSpan);
         }
 
@@ -103,11 +105,13 @@ public final class ExcelBuilder {
             return cell(term(string), rowIndex, columnIndex);
         }
 
-        public SheetTerm cell(String string, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+        public SheetTerm cell(String string, int rowIndex, int columnIndex, int rowSpan,
+                int columnSpan) {
             return cell(term(string), rowIndex, columnIndex, rowSpan, columnSpan);
         }
 
-        public SheetTerm cell(IExcelContent term, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+        public SheetTerm cell(IExcelContent term, int rowIndex, int columnIndex, int rowSpan,
+                int columnSpan) {
             sheet.getCells().add(new ExcelCell(term, rowIndex, columnIndex, rowSpan, columnSpan));
             return this;
         }
@@ -124,22 +128,27 @@ public final class ExcelBuilder {
             return richCell(term, rowIndex, columnIndex, 1, 1);
         }
 
-        public RichSheetTerm richCell(String string, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+        public RichSheetTerm richCell(String string, int rowIndex, int columnIndex, int rowSpan,
+                int columnSpan) {
             return richCell(term(string), rowIndex, columnIndex, rowSpan, columnSpan);
         }
 
-        public RichSheetTerm richCell(double number, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+        public RichSheetTerm richCell(double number, int rowIndex, int columnIndex, int rowSpan,
+                int columnSpan) {
             return richCell(term(number), rowIndex, columnIndex, rowSpan, columnSpan);
         }
 
-        public RichSheetTerm richCell(IExcelContent term, int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
-            ExcelRichCell cell = new ExcelRichCell(term, rowIndex, columnIndex, rowSpan, columnSpan);
+        public RichSheetTerm richCell(IExcelContent term, int rowIndex, int columnIndex,
+                int rowSpan, int columnSpan) {
+            ExcelRichCell cell = new ExcelRichCell(term, rowIndex, columnIndex, rowSpan,
+                    columnSpan);
             sheet.getCells().add(cell);
             return new RichSheetTerm(this, cell);
         }
     }
 
     public static class RichSheetTerm {
+
         private final SheetTerm sheetTerm;
         private final ExcelRichCell cell;
         private ExcelFont font;
@@ -379,6 +388,7 @@ public final class ExcelBuilder {
 
     @RequiredArgsConstructor
     public static class WorkbookTerm {
+
         private final ExcelWorkbook<ExcelSheet> book;
 
         public WorkbookTerm addSheet(ExcelSheet sheet) {

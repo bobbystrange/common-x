@@ -13,6 +13,7 @@ import org.dreamcat.common.x.excel.annotation.XlsStyle;
  */
 @Data
 public class ExcelStyle {
+
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
     private VerticalAlignment verticalAlignment = VerticalAlignment.CENTER;
     private boolean hidden;

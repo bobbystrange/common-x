@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Cell;
  */
 @SuppressWarnings("rawtypes")
 public class ExcelUnionContent implements IExcelContent {
+
     private final ExcelStringContent stringContent;
     private final ExcelNumericContent numericContent;
     private final ExcelBooleanContent booleanContent;

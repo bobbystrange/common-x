@@ -1,17 +1,17 @@
 package org.dreamcat.common.x.excel.csv;
 
-import lombok.Data;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import lombok.Data;
 
 /**
  * Create by tuke on 2020/8/10
  */
 @Data
 public class CsvMeta {
+
     // internal use only, for ignored filed
     public static final Cell IGNORED_CELL = new Cell();
 
@@ -31,6 +31,7 @@ public class CsvMeta {
 
     @Data
     public static class Cell {
+
         Field field;
         int index;
 

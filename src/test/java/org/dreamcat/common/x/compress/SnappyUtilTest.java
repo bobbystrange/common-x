@@ -1,10 +1,9 @@
 package org.dreamcat.common.x.compress;
 
-import org.dreamcat.common.util.RandomUtil;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.function.IntFunction;
+import org.dreamcat.common.util.RandomUtil;
+import org.junit.Test;
 
 /**
  * Create by tuke on 2020/4/7

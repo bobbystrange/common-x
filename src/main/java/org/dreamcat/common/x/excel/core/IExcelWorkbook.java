@@ -1,5 +1,11 @@
 package org.dreamcat.common.x.excel.core;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -9,13 +15,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Create by tuke on 2020/7/22
@@ -113,7 +112,7 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     default byte[] toByteArray() throws IOException {
         try (ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-             Workbook workbook = toWorkbook()) {
+                Workbook workbook = toWorkbook()) {
             workbook.write(ostream);
             return ostream.toByteArray();
         }
@@ -121,7 +120,7 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     default byte[] toByteArrayWithBigGrid() throws IOException {
         try (ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-             Workbook workbook = toWorkbookWithBigGrid()) {
+                Workbook workbook = toWorkbookWithBigGrid()) {
             workbook.write(ostream);
             return ostream.toByteArray();
         }
@@ -129,7 +128,7 @@ public interface IExcelWorkbook<T extends IExcelSheet> extends Iterable<T> {
 
     default byte[] toByteArray2003() throws IOException {
         try (ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-             Workbook workbook = toWorkbook2003()) {
+                Workbook workbook = toWorkbook2003()) {
             workbook.write(ostream);
             return ostream.toByteArray();
         }

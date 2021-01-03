@@ -19,6 +19,7 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class ExcelRichCell extends ExcelCell {
+
     protected ExcelFont font;
     protected ExcelStyle style;
     protected ExcelHyperLink hyperLink;

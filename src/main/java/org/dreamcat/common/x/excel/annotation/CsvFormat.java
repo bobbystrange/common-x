@@ -28,6 +28,7 @@ public @interface CsvFormat {
     Class<? extends Function<Object, String[]>> typeSerializer() default NoneTypeSerializer.class;
 
     class NoneSerializer implements Function<Object, String> {
+
         @Override
         public String apply(Object o) {
             throw new UnsupportedOperationException();
@@ -35,6 +36,7 @@ public @interface CsvFormat {
     }
 
     class NoneDeserializer implements Function<String, Object> {
+
         @Override
         public Object apply(String o) {
             throw new UnsupportedOperationException();
@@ -42,6 +44,7 @@ public @interface CsvFormat {
     }
 
     class NoneTypeSerializer implements Function<Object, String[]> {
+
         @Override
         public String[] apply(Object o) {
             throw new UnsupportedOperationException();
@@ -49,6 +52,7 @@ public @interface CsvFormat {
     }
 
     class NoneTypeDeserializer implements Function<String[], Object> {
+
         @Override
         public Object apply(String[] o) {
             throw new UnsupportedOperationException();

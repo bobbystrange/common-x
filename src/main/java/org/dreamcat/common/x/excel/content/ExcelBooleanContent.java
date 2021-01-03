@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.CellType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExcelBooleanContent implements IExcelContent {
+
     private boolean value;
 
     @Override

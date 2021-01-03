@@ -1,5 +1,9 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.dreamcat.common.x.excel.content.IExcelContent;
@@ -8,11 +12,6 @@ import org.dreamcat.common.x.excel.core.IExcelSheet;
 import org.dreamcat.common.x.excel.core.IExcelWriteCallback;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Create by tuke on 2020/7/26
@@ -24,6 +23,7 @@ import java.util.List;
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class AnnotationListSheet implements IExcelSheet {
+
     private final String name;
     // [Sheet..., T1..., Sheet..., T2...], it mixes Sheet & Pojo up
     private final List schemes;
@@ -66,6 +66,7 @@ public class AnnotationListSheet implements IExcelSheet {
 
     @Getter
     private class Iter implements Iterator<IExcelCell>, IExcelCell {
+
         // as row index offset since row based structure
         int offset;
         int schemeSize;

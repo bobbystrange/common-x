@@ -1,5 +1,11 @@
 package org.dreamcat.common.x.excel.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -13,18 +19,12 @@ import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelHyperLink;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 /**
  * Create by tuke on 2020/7/20
  */
 @Data
 public class ExcelSheet implements IExcelSheet {
+
     private final String name;
     private final List<IExcelCell> cells;
     private IExcelWriteCallback writeCallback;
@@ -123,7 +123,8 @@ public class ExcelSheet implements IExcelSheet {
         return excelSheet;
     }
 
-    private static IExcelCell getLeftCell(IExcelCell cell, Map<Integer, Map<Integer, ExcelCell>> map) {
+    private static IExcelCell getLeftCell(IExcelCell cell,
+            Map<Integer, Map<Integer, ExcelCell>> map) {
         int ri = cell.getRowIndex();
         int ci = cell.getColumnIndex();
         ExcelCell excelCell;
@@ -134,7 +135,8 @@ public class ExcelSheet implements IExcelSheet {
         return null;
     }
 
-    private static IExcelCell getTopCell(IExcelCell cell, Map<Integer, Map<Integer, ExcelCell>> map) {
+    private static IExcelCell getTopCell(IExcelCell cell,
+            Map<Integer, Map<Integer, ExcelCell>> map) {
         int ri = cell.getRowIndex();
         int ci = cell.getColumnIndex();
         ExcelCell excelCell;

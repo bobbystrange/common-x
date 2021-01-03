@@ -18,7 +18,7 @@ import org.dreamcat.common.util.ObjectUtil;
 @Slf4j
 public final class SevenZUtil {
 
-    private SevenZUtil(){
+    private SevenZUtil() {
     }
 
     private static final int BUFFER_SIZE = 4096;
@@ -27,14 +27,16 @@ public final class SevenZUtil {
         archive(srcFile, destFile, SevenZMethod.LZMA2);
     }
 
-    public static void archive(File srcFile, File destFile, SevenZMethod method) throws IOException {
+    public static void archive(File srcFile, File destFile, SevenZMethod method)
+            throws IOException {
         try (SevenZOutputFile outs = new SevenZOutputFile(destFile)) {
             outs.setContentCompression(method);
             archive(srcFile, outs, "");
         }
     }
 
-    public static void archive(File srcFile, SevenZOutputFile outs, String basePath) throws IOException {
+    public static void archive(File srcFile, SevenZOutputFile outs, String basePath)
+            throws IOException {
         if (srcFile.isDirectory()) {
             archiveDir(srcFile, outs, basePath);
         } else {
@@ -42,7 +44,8 @@ public final class SevenZUtil {
         }
     }
 
-    private static void archiveDir(File dir, SevenZOutputFile outs, String basePath) throws IOException {
+    private static void archiveDir(File dir, SevenZOutputFile outs, String basePath)
+            throws IOException {
         File[] files = dir.listFiles();
         if (ObjectUtil.isEmpty(files)) {
             SevenZArchiveEntry entry = new SevenZArchiveEntry();
@@ -114,7 +117,8 @@ public final class SevenZUtil {
             for (int i = 0; i < quotient; i++) {
                 count = ins.read(data);
                 if (count != BUFFER_SIZE) {
-                    log.error("Discontinuous file stream, expect read {} but got {}", BUFFER_SIZE, count);
+                    log.error("Discontinuous file stream, expect read {} but got {}", BUFFER_SIZE,
+                            count);
                     if (!destFile.delete() && destFile.exists()) {
                         log.error("Failed to rm {}", destFile);
                     }

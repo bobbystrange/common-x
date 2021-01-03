@@ -1,5 +1,9 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.Getter;
 import org.dreamcat.common.util.BeanUtil;
@@ -8,17 +12,13 @@ import org.dreamcat.common.x.excel.content.IExcelContent;
 import org.dreamcat.common.x.excel.core.IExcelCell;
 import org.dreamcat.common.x.excel.core.IExcelSheet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Create by tuke on 2020/7/22
  */
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SimpleListSheet implements IExcelSheet {
+
     private final String name;
     // [Cell..., T1, Cell..., T2], it mixes Cell & Pojo up
     private final List schemes;
@@ -51,6 +51,7 @@ public class SimpleListSheet implements IExcelSheet {
 
     @Getter
     private class Iter extends ExcelUnionContent implements Iterator<IExcelCell>, IExcelCell {
+
         // as row index offset since row based structure
         int offset;
         int schemeSize;
@@ -140,7 +141,7 @@ public class SimpleListSheet implements IExcelSheet {
 
         @Override
         public IExcelCell next() {
-            if(!hasNext()) throw new NoSuchElementException();
+            if (!hasNext()) throw new NoSuchElementException();
 
             // in cell case scheme
             if (nextCell != null) {

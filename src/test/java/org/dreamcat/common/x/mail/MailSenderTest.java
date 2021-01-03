@@ -1,20 +1,20 @@
 package org.dreamcat.common.x.mail;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.mail.MessagingException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
+import javax.mail.MessagingException;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
  * Create by tuke on 2020/5/1
  */
 public class MailSenderTest {
+
     private MailSender mailSender;
     private String username;
 

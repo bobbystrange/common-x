@@ -21,6 +21,7 @@ public @interface XlsFormat {
     Class<? extends Function> deserializer() default None.class;
 
     class None implements Function {
+
         @Override
         public Object apply(Object o) {
             throw new IllegalStateException("this method may not be invoked");

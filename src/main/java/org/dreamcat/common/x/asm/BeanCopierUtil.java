@@ -1,10 +1,9 @@
 package org.dreamcat.common.x.asm;
 
-import net.sf.cglib.beans.BeanCopier;
-import org.dreamcat.common.util.ReflectUtil;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.sf.cglib.beans.BeanCopier;
+import org.dreamcat.common.util.ReflectUtil;
 
 /**
  * Create by tuke on 2020/3/3
@@ -12,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public final class BeanCopierUtil {
 
-    private BeanCopierUtil(){
+    private BeanCopierUtil() {
     }
 
     // Note that it may cause OOM when coping too many dynamic classes
@@ -61,7 +60,8 @@ public final class BeanCopierUtil {
         copier.copy(source, target, BeanCopierUtil::convert);
     }
 
-    private static Object convert(Object sourceFieldValue, Class targetFieldClass, Object targetFieldSetterName) {
+    private static Object convert(Object sourceFieldValue, Class targetFieldClass,
+            Object targetFieldSetterName) {
         return ReflectUtil.cast(sourceFieldValue, targetFieldClass);
     }
 

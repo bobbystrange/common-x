@@ -12,6 +12,7 @@ import org.dreamcat.common.x.excel.content.IExcelContent;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExcelCell implements IExcelCell {
+
     protected IExcelContent content;
     protected int rowIndex;
     protected int columnIndex;

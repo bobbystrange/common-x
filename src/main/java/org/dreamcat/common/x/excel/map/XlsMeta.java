@@ -1,5 +1,13 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.Data;
 import org.dreamcat.common.util.ReflectUtil;
 import org.dreamcat.common.util.StringUtil;
@@ -13,20 +21,12 @@ import org.dreamcat.common.x.excel.annotation.XlsStyle;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 /**
  * Create by tuke on 2020/7/24
  */
 @SuppressWarnings("rawtypes")
 public class XlsMeta {
+
     // internal use only, for ignored filed
     public static final Cell IGNORED_CELL = new Cell();
     // @XlsSheet
@@ -64,6 +64,7 @@ public class XlsMeta {
     // @XlsCell
     @Data
     public static class Cell {
+
         int fieldIndex;
         String fieldName;
 
@@ -183,7 +184,8 @@ public class XlsMeta {
         }
     }
 
-    private static Cell parseXlsCell(XlsMeta meta, Class<?> clazz, Field field, int index, boolean onlyAnnotated, boolean enableExpanded) {
+    private static Cell parseXlsCell(XlsMeta meta, Class<?> clazz, Field field, int index,
+            boolean onlyAnnotated, boolean enableExpanded) {
         XlsCell xlsCell = field.getDeclaredAnnotation(XlsCell.class);
         if (xlsCell == null) {
             if (onlyAnnotated) return null;
@@ -215,7 +217,8 @@ public class XlsMeta {
         } else {
             XlsMeta fieldMetadata = parse(fieldClass, false);
             if (fieldMetadata == null) {
-                throw new IllegalArgumentException("no @XlsSheet in class " + fieldClass + " on field " + field);
+                throw new IllegalArgumentException(
+                        "no @XlsSheet in class " + fieldClass + " on field " + field);
             }
             cell.setExpandedMeta(fieldMetadata);
         }
@@ -226,7 +229,8 @@ public class XlsMeta {
         Class<?> fieldClass = field.getType();
         if (fieldClass.isAssignableFrom(List.class)) {
             if (expandedType == Void.class) {
-                throw new IllegalArgumentException("require to specify XlsCell#expandedType in List filed on field " + field);
+                throw new IllegalArgumentException(
+                        "require to specify XlsCell#expandedType in List filed on field " + field);
             }
             fieldClass = expandedType;
         } else if (fieldClass.isArray()) {

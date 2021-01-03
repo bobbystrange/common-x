@@ -1,10 +1,9 @@
 package org.dreamcat.common.x.asm;
 
-import org.dreamcat.common.util.ReflectUtil;
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.dreamcat.common.util.ReflectUtil;
+import org.junit.Test;
 
 /**
  * Create by tuke on 2020/8/11

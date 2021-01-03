@@ -1,24 +1,25 @@
 package org.dreamcat.common.x.excel.benchmark;
 
-import org.dreamcat.common.util.BeanUtil;
-import org.dreamcat.common.core.Timeit;
-import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
-import org.dreamcat.common.x.excel.core.ExcelCell;
-import org.dreamcat.common.x.excel.core.ExcelSheet;
-import org.dreamcat.common.x.excel.core.ExcelWorkbook;
-import org.dreamcat.common.x.excel.map.AnnotationListSheet;
-import org.junit.Test;
+import static org.dreamcat.common.util.RandomUtil.choose26;
+import static org.dreamcat.common.util.RandomUtil.rand;
+import static org.dreamcat.common.util.RandomUtil.randi;
+import static org.dreamcat.common.x.excel.map.XlsMetaTest.Item;
+import static org.dreamcat.common.x.excel.map.XlsMetaTest.Pojo;
+import static org.dreamcat.common.x.excel.util.ExcelBuilder.term;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.dreamcat.common.util.RandomUtil.*;
-import static org.dreamcat.common.x.excel.map.XlsMetaTest.Item;
-import static org.dreamcat.common.x.excel.map.XlsMetaTest.Pojo;
-import static org.dreamcat.common.x.excel.util.ExcelBuilder.term;
+import org.dreamcat.common.core.Timeit;
+import org.dreamcat.common.util.BeanUtil;
+import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
+import org.dreamcat.common.x.excel.core.ExcelCell;
+import org.dreamcat.common.x.excel.core.ExcelSheet;
+import org.dreamcat.common.x.excel.core.ExcelWorkbook;
+import org.dreamcat.common.x.excel.map.AnnotationListSheet;
+import org.junit.Test;
 
 /**
  * Create by tuke on 2020/7/27
@@ -60,7 +61,8 @@ public class AnnotationListSheetSpeedTest {
                     .addUnaryAction(() -> newPojoList(size), this::byCopy)
                     .addUnaryAction(() -> newPojoList(size), this::byReuse)
                     .count(3).skip(1).run();
-            String s = Arrays.stream(ts).mapToObj(it -> String.format("%6.3fms", it / 1000_000.)).collect(Collectors.joining("\t"));
+            String s = Arrays.stream(ts).mapToObj(it -> String.format("%6.3fms", it / 1000_000.))
+                    .collect(Collectors.joining("\t"));
             System.out.printf("%05d \t %6.3f%% %s\n", i, (1 - ((0.0 + ts[1]) / ts[0])) * 100, s);
         }
     }

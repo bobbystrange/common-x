@@ -1,5 +1,11 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -10,13 +16,6 @@ import org.dreamcat.common.util.ArrayUtil;
 import org.dreamcat.common.util.StringUtil;
 import org.dreamcat.common.x.excel.content.IExcelContent;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * Create by tuke on 2020/8/13
  */
@@ -25,13 +24,15 @@ public final class ExcelMapper {
     private ExcelMapper() {
     }
 
-    public static List<List<List<String>>> parseAsString(String filename) throws IOException, InvalidFormatException {
+    public static List<List<List<String>>> parseAsString(String filename)
+            throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(filename), list -> list == null ? null : list.stream()
                 .map(StringUtil::toString)
                 .collect(Collectors.toList()));
     }
 
-    public static List<List<List<String>>> parseAsString(File file) throws IOException, InvalidFormatException {
+    public static List<List<List<String>>> parseAsString(File file)
+            throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(file), list -> list == null ? null : list.stream()
                 .map(StringUtil::toString)
                 .collect(Collectors.toList()));
@@ -51,27 +52,33 @@ public final class ExcelMapper {
 
     // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
-    public static List<List<String>> parseAsString(String filename, int sheetIndex) throws IOException, InvalidFormatException {
+    public static List<List<String>> parseAsString(String filename, int sheetIndex)
+            throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(filename, sheetIndex), StringUtil::toString);
     }
 
-    public static List<List<String>> parseAsString(File file, int sheetIndex) throws IOException, InvalidFormatException {
+    public static List<List<String>> parseAsString(File file, int sheetIndex)
+            throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(file, sheetIndex), StringUtil::toString);
     }
 
-    public static List<List<String>> parseAsString(InputStream input, int sheetIndex) throws IOException {
+    public static List<List<String>> parseAsString(InputStream input, int sheetIndex)
+            throws IOException {
         return ArrayUtil.map(parse(input, sheetIndex), StringUtil::toString);
     }
 
-    public static List<List<String>> parseAsString(String filename, String sheetName) throws IOException, InvalidFormatException {
+    public static List<List<String>> parseAsString(String filename, String sheetName)
+            throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(filename, sheetName), StringUtil::toString);
     }
 
-    public static List<List<String>> parseAsString(File file, String sheetName) throws IOException, InvalidFormatException {
+    public static List<List<String>> parseAsString(File file, String sheetName)
+            throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(file, sheetName), StringUtil::toString);
     }
 
-    public static List<List<String>> parseAsString(InputStream input, String sheetName) throws IOException {
+    public static List<List<String>> parseAsString(InputStream input, String sheetName)
+            throws IOException {
         return ArrayUtil.map(parse(input, sheetName), StringUtil::toString);
     }
 
@@ -89,11 +96,13 @@ public final class ExcelMapper {
 
     // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
-    public static List<List<List<Object>>> parse(String filename) throws IOException, InvalidFormatException {
+    public static List<List<List<Object>>> parse(String filename)
+            throws IOException, InvalidFormatException {
         return parse(new File(filename));
     }
 
-    public static List<List<List<Object>>> parse(File file) throws IOException, InvalidFormatException {
+    public static List<List<List<Object>>> parse(File file)
+            throws IOException, InvalidFormatException {
         try (Workbook workbook = new XSSFWorkbook(file)) {
             return parse(workbook);
         }
@@ -119,11 +128,13 @@ public final class ExcelMapper {
 
     // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
-    public static List<List<Object>> parse(String filename, int sheetIndex) throws IOException, InvalidFormatException {
+    public static List<List<Object>> parse(String filename, int sheetIndex)
+            throws IOException, InvalidFormatException {
         return parse(new File(filename), sheetIndex);
     }
 
-    public static List<List<Object>> parse(File file, int sheetIndex) throws IOException, InvalidFormatException {
+    public static List<List<Object>> parse(File file, int sheetIndex)
+            throws IOException, InvalidFormatException {
         try (Workbook workbook = new XSSFWorkbook(file)) {
             return parse(workbook, sheetIndex);
         }
@@ -135,11 +146,13 @@ public final class ExcelMapper {
         }
     }
 
-    public static List<List<Object>> parse(String filename, String sheetName) throws IOException, InvalidFormatException {
+    public static List<List<Object>> parse(String filename, String sheetName)
+            throws IOException, InvalidFormatException {
         return parse(new File(filename), sheetName);
     }
 
-    public static List<List<Object>> parse(File file, String sheetName) throws IOException, InvalidFormatException {
+    public static List<List<Object>> parse(File file, String sheetName)
+            throws IOException, InvalidFormatException {
         try (Workbook workbook = new XSSFWorkbook(file)) {
             return parse(workbook, sheetName);
         }

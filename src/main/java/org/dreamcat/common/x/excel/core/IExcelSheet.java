@@ -16,13 +16,15 @@ import org.dreamcat.common.x.excel.style.ExcelStyle;
  * Create by tuke on 2020/7/22
  */
 public interface IExcelSheet extends Iterable<IExcelCell> {
+
     String getName();
 
     default IExcelWriteCallback writeCallback() {
         return null;
     }
 
-    default void fill(Workbook workbook, Sheet sheet, int sheetIndex, CellStyle defaultStyle, Font defaultFont) {
+    default void fill(Workbook workbook, Sheet sheet, int sheetIndex, CellStyle defaultStyle,
+            Font defaultFont) {
         IExcelWriteCallback writeCallback = writeCallback();
         if (writeCallback != null) writeCallback.onCreateSheet(workbook, sheet, sheetIndex);
         for (IExcelCell excelCell : this) {
@@ -47,7 +49,8 @@ public interface IExcelSheet extends Iterable<IExcelCell> {
                 row = sheet.createRow(ri);
             }
             Cell cell = row.createCell(ci);
-            if (writeCallback != null) writeCallback.onCreateCell(workbook, sheet, sheetIndex, row, cell);
+            if (writeCallback != null)
+                writeCallback.onCreateCell(workbook, sheet, sheetIndex, row, cell);
 
             cellContent.fill(cell);
             if (cellLink != null) {
@@ -81,7 +84,9 @@ public interface IExcelSheet extends Iterable<IExcelCell> {
                 cell.setCellStyle(style);
             }
             if (writeCallback != null)
-                writeCallback.onFinishCell(workbook, sheet, sheetIndex, row, cell, cellContent, style, font);
+                writeCallback
+                        .onFinishCell(workbook, sheet, sheetIndex, row, cell, cellContent, style,
+                                font);
         }
         if (writeCallback != null) writeCallback.onFinishSheet(workbook, sheet, sheetIndex);
     }

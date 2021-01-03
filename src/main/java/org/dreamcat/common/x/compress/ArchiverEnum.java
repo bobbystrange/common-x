@@ -1,5 +1,13 @@
 package org.dreamcat.common.x.compress;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -15,15 +23,6 @@ import org.apache.commons.compress.archivers.cpio.CpioArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Create by tuke on 2020/4/7
@@ -158,16 +157,19 @@ public enum ArchiverEnum {
 
     @FunctionalInterface
     interface OutputConstructor {
+
         ArchiveOutputStream newInstance(OutputStream outs);
     }
 
     @FunctionalInterface
     interface InputConstructor {
+
         ArchiveInputStream newInstance(InputStream outs) throws ArchiveException;
     }
 
     @FunctionalInterface
     interface EntryConstructor {
+
         ArchiveEntry newInstance(String name, long size);
     }
 }

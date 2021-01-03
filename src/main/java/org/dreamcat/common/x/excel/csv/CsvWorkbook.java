@@ -1,8 +1,5 @@
 package org.dreamcat.common.x.excel.csv;
 
-import org.dreamcat.common.util.BeanUtil;
-import org.dreamcat.common.io.csv.CsvReader;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,12 +9,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import org.dreamcat.common.io.csv.CsvReader;
+import org.dreamcat.common.util.BeanUtil;
 
 /**
  * Create by tuke on 2020/7/28
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class CsvWorkbook<T> implements ICsvWorkbook {
+
     private final List<T> values;
 
     public CsvWorkbook(List<T> values) {
@@ -120,6 +120,7 @@ public class CsvWorkbook<T> implements ICsvWorkbook {
     }
 
     class Iter implements Iterator<Iterable<String>> {
+
         final Iterator<T> iterator;
 
         Iter() {

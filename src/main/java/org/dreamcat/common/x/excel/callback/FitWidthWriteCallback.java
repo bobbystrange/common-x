@@ -13,8 +13,10 @@ import org.dreamcat.common.x.excel.core.IExcelWriteCallback;
  * Create by tuke on 2020/7/26
  */
 public class FitWidthWriteCallback implements IExcelWriteCallback {
+
     @Override
-    public void onFinishCell(Workbook workbook, Sheet sheet, int sheetIndex, Row row, Cell cell, IExcelContent content, CellStyle style, Font font) {
+    public void onFinishCell(Workbook workbook, Sheet sheet, int sheetIndex, Row row, Cell cell,
+            IExcelContent content, CellStyle style, Font font) {
         double px = 1;
         if (font != null) {
             px = font.getFontHeightInPoints() / 12.;

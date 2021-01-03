@@ -1,18 +1,19 @@
 package org.dreamcat.common.x.excel.easyexcel;
 
+import static org.dreamcat.common.util.RandomUtil.choose26;
+import static org.dreamcat.common.util.RandomUtil.rand;
+import static org.dreamcat.common.util.RandomUtil.randi;
+
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.Test;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static org.dreamcat.common.util.RandomUtil.*;
 
 /**
  * Create by tuke on 2020/7/24
@@ -47,6 +48,7 @@ public class EasyExcelTest {
     @NoArgsConstructor
     @AllArgsConstructor
     static class Pojo {
+
         int a;
         double b;
         Long c;

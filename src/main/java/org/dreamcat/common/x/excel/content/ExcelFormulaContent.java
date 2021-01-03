@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.CellType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExcelFormulaContent implements IExcelContent {
+
     private String formula;
 
     @Override

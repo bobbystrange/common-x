@@ -1,5 +1,9 @@
 package org.dreamcat.common.x.asm;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -10,11 +14,6 @@ import javassist.NotFoundException;
 import javassist.bytecode.ClassFile;
 import org.dreamcat.common.util.ReflectUtil;
 import org.dreamcat.common.util.StringUtil;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Create by tuke on 2020/5/28
@@ -43,7 +42,8 @@ public class MakeClass {
 
     // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
-    public MakeClass superClass(Class<?> superClass) throws NotFoundException, CannotCompileException {
+    public MakeClass superClass(Class<?> superClass)
+            throws NotFoundException, CannotCompileException {
         cc.setSuperclass(pool.get(superClass.getCanonicalName()));
         return this;
     }
@@ -90,7 +90,8 @@ public class MakeClass {
         return annotation(annotationClass.getCanonicalName(), name, value);
     }
 
-    public MakeClass constructors(Collection<CtConstructor> constructors) throws CannotCompileException {
+    public MakeClass constructors(Collection<CtConstructor> constructors)
+            throws CannotCompileException {
         for (CtConstructor constructor : constructors) {
             cc.addConstructor(constructor);
         }

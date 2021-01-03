@@ -1,16 +1,18 @@
 package org.dreamcat.common.x.excel.map;
 
+import static org.dreamcat.common.util.RandomUtil.choose26;
+import static org.dreamcat.common.util.RandomUtil.choose72;
+import static org.dreamcat.common.util.RandomUtil.rand;
+import static org.dreamcat.common.util.RandomUtil.randi;
+import static org.dreamcat.common.x.excel.util.ExcelBuilder.term;
+
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dreamcat.common.x.excel.core.ExcelCell;
 import org.dreamcat.common.x.excel.core.ExcelWorkbook;
 import org.junit.Test;
-
-import java.util.ArrayList;
-
-import static org.dreamcat.common.util.RandomUtil.*;
-import static org.dreamcat.common.x.excel.util.ExcelBuilder.term;
 
 /**
  * Create by tuke on 2020/7/22
@@ -83,7 +85,6 @@ public class SimpleListSheetTest {
         }
         sheet.addAll(pojoList);
 
-
         ExcelWorkbook<SimpleListSheet> book = new ExcelWorkbook<>();
         book.getSheets().add(sheet);
         book.writeTo("/Users/tuke/Downloads/book.xlsx");
@@ -117,6 +118,7 @@ public class SimpleListSheetTest {
     @NoArgsConstructor
     @AllArgsConstructor
     static class Pojo {
+
         int a;
         double b;
         Long c;

@@ -49,7 +49,8 @@ public class BeanMapUtilTest {
 
     @Test
     public void speed() {
-        System.out.println("  \t\t  asm(fromMap) \t  reflect(fromMap) asm(toMap) \t  reflect(toMap)");
+        System.out
+                .println("  \t\t  asm(fromMap) \t  reflect(fromMap) asm(toMap) \t  reflect(toMap)");
         for (int i = 1; i <= 1024; i *= 5) {
             long[] ts = Timeit.ofActions()
                     .addUnaryAction(() -> BeanMapUtil.toMap(newC()), it -> {
@@ -63,7 +64,8 @@ public class BeanMapUtilTest {
                     .addUnaryAction(BeanMapUtilTest::newC,
                             BeanUtil::toMap)
                     .count(10).skip(2).repeat(i).run();
-            String s = Arrays.stream(ts).mapToObj(it -> String.format("%6.3fms", it / 1000_000.)).collect(Collectors.joining(" \t\t "));
+            String s = Arrays.stream(ts).mapToObj(it -> String.format("%6.3fms", it / 1000_000.))
+                    .collect(Collectors.joining(" \t\t "));
             System.out.printf("%05d \t %s\n", i, s);
         }
     }
@@ -107,6 +109,7 @@ public class BeanMapUtilTest {
     @Getter
     @Setter
     public static class A {
+
         int x1;
         Double x2;
         String x3;
@@ -115,6 +118,7 @@ public class BeanMapUtilTest {
     @Getter
     @Setter
     public static class B extends A {
+
         String y1;
         int y2;
         Double y3;
@@ -124,11 +128,13 @@ public class BeanMapUtilTest {
     @Setter
     @NoArgsConstructor
     public static class C extends B {
+
         long z1;
         Byte z2;
         String z3;
 
-        public C(int x1, Double x2, String x3, String y1, int y2, Double y3, long z1, Byte z2, String z3) {
+        public C(int x1, Double x2, String x3, String y1, int y2, Double y3, long z1, Byte z2,
+                String z3) {
             this.x1 = x1;
             this.x2 = x2;
             this.x3 = x3;

@@ -1,13 +1,12 @@
 package org.dreamcat.common.x.asm;
 
-import lombok.extern.slf4j.Slf4j;
-import net.sf.cglib.beans.BeanMap;
-import org.dreamcat.common.util.ReflectUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.cglib.beans.BeanMap;
+import org.dreamcat.common.util.ReflectUtil;
 
 /**
  * Create by tuke on 2020/6/5
@@ -16,7 +15,7 @@ import java.util.Map;
 @SuppressWarnings({"unchecked"})
 public final class BeanMapUtil {
 
-    private BeanMapUtil(){
+    private BeanMapUtil() {
     }
 
     /**

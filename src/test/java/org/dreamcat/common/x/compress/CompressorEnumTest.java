@@ -1,13 +1,12 @@
 package org.dreamcat.common.x.compress;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.dreamcat.common.function.ThrowableFunction;
 import org.dreamcat.common.util.ByteUtil;
 import org.dreamcat.common.util.RandomUtil;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

@@ -7,6 +7,7 @@ import lombok.Data;
  */
 @Data
 public class MakeClassTestBase {
+
     private int i;
     private String s;
 }

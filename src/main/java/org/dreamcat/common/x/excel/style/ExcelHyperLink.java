@@ -18,6 +18,7 @@ import org.dreamcat.common.x.excel.core.IExcelCell;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExcelHyperLink {
+
     private HyperlinkType type;
     private String address;
     private String label;

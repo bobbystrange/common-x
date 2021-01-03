@@ -49,6 +49,7 @@ public class XlsMetaTest {
     @AllArgsConstructor
     @XlsSheet(name = "Sheet One")
     public static class Pojo {
+
         @XlsStyle(horizontalAlignment = HorizontalAlignment.CENTER)
         @XlsRichStyle(fgIndexedColor = IndexedColors.VIOLET)
         @XlsFont(name = "宋体", height = 24)
@@ -76,6 +77,7 @@ public class XlsMetaTest {
     @AllArgsConstructor
     @XlsSheet(name = "item")
     public static class Item {
+
         Long r1;
         String r2;
     }

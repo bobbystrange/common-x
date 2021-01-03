@@ -1,5 +1,12 @@
 package org.dreamcat.common.x.excel.parse.tow;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.dreamcat.common.core.FieldColumn;
@@ -9,20 +16,13 @@ import org.dreamcat.common.util.ReflectUtil;
 import org.dreamcat.common.x.excel.parse.IExcelParser;
 import org.dreamcat.common.x.excel.parse.XlsParse;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 /**
  * Create by tuke on 2020/8/27
  */
 @Slf4j
 @Setter
 public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
+
     private int headerIndex = 0;
     // tow level sequence column index
     private final int scalarSequenceIndex;
@@ -129,7 +129,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
         return list;
     }
 
-    private int readOneRow(SVRow<S, V> bean, List<String> headers, List<String> values) throws IllegalAccessException {
+    private int readOneRow(SVRow<S, V> bean, List<String> headers, List<String> values)
+            throws IllegalAccessException {
         S scalar = ReflectUtil.newInstance(scalarClass);
         scalarField.set(bean, scalar);
 
@@ -150,7 +151,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
                         continue;
                     } else {
                         XlsParse xlsParse = (XlsParse) annotations.get(0);
-                        Class<? extends Function<String, Object>> deserializerClass = xlsParse.deserializer();
+                        Class<? extends Function<String, Object>> deserializerClass = xlsParse
+                                .deserializer();
                         deserializer = ReflectUtil.newInstance(deserializerClass);
                         deserializerMap.put(field, deserializer);
                     }
@@ -175,7 +177,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
                         continue;
                     } else {
                         XlsParse xlsParse = (XlsParse) childAnnotations.get(0);
-                        Class<? extends Function<String, Object>> deserializerClass = xlsParse.deserializer();
+                        Class<? extends Function<String, Object>> deserializerClass = xlsParse
+                                .deserializer();
                         deserializer = ReflectUtil.newInstance(deserializerClass);
                         deserializerMap.put(field, deserializer);
                     }
@@ -221,7 +224,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
         return width;
     }
 
-    private SVColumn<V> readSVColumn(List<String> headers, List<String> values, int offset) throws IllegalAccessException {
+    private SVColumn<V> readSVColumn(List<String> headers, List<String> values, int offset)
+            throws IllegalAccessException {
         SVColumn<V> svColumn = new SVColumn<>();
 
         V svColumnScalar = ReflectUtil.newInstance(vectorClass);
@@ -242,7 +246,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
                         continue;
                     } else {
                         XlsParse xlsParse = (XlsParse) annotations.get(0);
-                        Class<? extends Function<String, Object>> deserializerClass = xlsParse.deserializer();
+                        Class<? extends Function<String, Object>> deserializerClass = xlsParse
+                                .deserializer();
                         deserializer = ReflectUtil.newInstance(deserializerClass);
                         deserializerMap.put(field, deserializer);
                     }
@@ -267,7 +272,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
                         continue;
                     } else {
                         XlsParse xlsParse = (XlsParse) childAnnotations.get(0);
-                        Class<? extends Function<String, Object>> deserializerClass = xlsParse.deserializer();
+                        Class<? extends Function<String, Object>> deserializerClass = xlsParse
+                                .deserializer();
                         deserializer = ReflectUtil.newInstance(deserializerClass);
                         deserializerMap.put(field, deserializer);
                     }
@@ -283,7 +289,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
         return svColumn;
     }
 
-    private void fillScalarMap(SVRow<S, V> bean, List<String> headers, List<String> values, int start, int end) throws IllegalAccessException {
+    private void fillScalarMap(SVRow<S, V> bean, List<String> headers, List<String> values,
+            int start, int end) throws IllegalAccessException {
         Map<String, String> map = new HashMap<>();
         scalarMapField.set(bean, map);
         for (int i = start; i < end; i++) {
@@ -291,7 +298,8 @@ public class SVParser<S, V> implements IExcelParser<SVRow<S, V>> {
         }
     }
 
-    private void fillVectorMap(SVColumn<V> svColumn, List<String> headers, List<String> values, int start, int end) throws IllegalAccessException {
+    private void fillVectorMap(SVColumn<V> svColumn, List<String> headers, List<String> values,
+            int start, int end) throws IllegalAccessException {
         Map<String, String> map = new HashMap<>();
         scalarMapField.set(svColumn, map);
         for (int i = start; i < end; i++) {

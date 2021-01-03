@@ -13,6 +13,7 @@ import org.dreamcat.common.x.excel.annotation.XlsFont;
  */
 @Data
 public class ExcelFont {
+
     private String name;
     private boolean bold;
     private boolean italic;

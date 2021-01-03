@@ -22,7 +22,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 @Slf4j
 public final class ZipUtil {
 
-    private ZipUtil(){
+    private ZipUtil() {
     }
 
     private static final int BUFFER_SIZE = 4096;

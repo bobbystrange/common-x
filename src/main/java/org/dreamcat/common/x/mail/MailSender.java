@@ -1,9 +1,9 @@
 package org.dreamcat.common.x.mail;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.dreamcat.common.util.ObjectUtil;
-
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -20,16 +20,16 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.dreamcat.common.util.ObjectUtil;
 
 /**
  * Create by tuke on 2019-01-27
  */
 @AllArgsConstructor
 public class MailSender {
+
     private static final String DEFAULT_BYTES_TYPE = "application/octet-stream";
 
     @Getter
@@ -60,6 +60,7 @@ public class MailSender {
     }
 
     public static class Op {
+
         private final MailSender sender;
         private final Session session;
         private final MimeMessage message;
@@ -163,7 +164,8 @@ public class MailSender {
             return this;
         }
 
-        public Op bytesAttachments(Map<String, byte[]> bytesAttachments, String mimeType) throws MessagingException {
+        public Op bytesAttachments(Map<String, byte[]> bytesAttachments, String mimeType)
+                throws MessagingException {
             for (Map.Entry<String, byte[]> entry : bytesAttachments.entrySet()) {
                 String attachmentFileName = entry.getKey();
                 byte[] bytes = entry.getValue();
@@ -173,7 +175,8 @@ public class MailSender {
             return this;
         }
 
-        public Op bytesAttachment(String filename, byte[] bytes, String mimeType) throws MessagingException {
+        public Op bytesAttachment(String filename, byte[] bytes, String mimeType)
+                throws MessagingException {
             if (mimeType == null) mimeType = DEFAULT_BYTES_TYPE;
 
             BodyPart attachmentPart = new MimeBodyPart();

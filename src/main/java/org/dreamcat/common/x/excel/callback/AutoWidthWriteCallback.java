@@ -10,6 +10,7 @@ import org.dreamcat.common.x.excel.core.IExcelWriteCallback;
  * Create by tuke on 2020/8/13
  */
 public class AutoWidthWriteCallback implements IExcelWriteCallback {
+
     private int lastColumnNum;
 
     @Override

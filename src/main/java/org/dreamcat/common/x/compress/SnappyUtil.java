@@ -1,8 +1,5 @@
 package org.dreamcat.common.x.compress;
 
-import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
-import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStream;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,13 +8,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.commons.compress.compressors.snappy.SnappyCompressorInputStream;
+import org.apache.commons.compress.compressors.snappy.SnappyCompressorOutputStream;
 
 /**
  * Create by tuke on 2020/4/7
  */
 public final class SnappyUtil {
 
-    private SnappyUtil(){
+    private SnappyUtil() {
     }
 
     private static final int DEFAULT_BLOCK_SIZE = SnappyCompressorInputStream.DEFAULT_BLOCK_SIZE;
@@ -44,12 +43,15 @@ public final class SnappyUtil {
     }
 
     // 32k block size
-    public static void compress(InputStream ins, OutputStream outs, long uncompressedSize) throws IOException {
+    public static void compress(InputStream ins, OutputStream outs, long uncompressedSize)
+            throws IOException {
         compress(ins, outs, uncompressedSize, DEFAULT_BLOCK_SIZE);
     }
 
-    public static void compress(InputStream ins, OutputStream outs, long uncompressedSize, int blockSize) throws IOException {
-        SnappyCompressorOutputStream cos = new SnappyCompressorOutputStream(outs, uncompressedSize, blockSize);
+    public static void compress(InputStream ins, OutputStream outs, long uncompressedSize,
+            int blockSize) throws IOException {
+        SnappyCompressorOutputStream cos = new SnappyCompressorOutputStream(outs, uncompressedSize,
+                blockSize);
         int count;
         byte[] data = new byte[4096];
         while ((count = ins.read(data)) > 0) {
@@ -85,7 +87,8 @@ public final class SnappyUtil {
         uncompress(ins, outs, DEFAULT_BLOCK_SIZE);
     }
 
-    public static void uncompress(InputStream ins, OutputStream outs, int blockSize) throws IOException {
+    public static void uncompress(InputStream ins, OutputStream outs, int blockSize)
+            throws IOException {
         SnappyCompressorInputStream cis = new SnappyCompressorInputStream(ins, blockSize);
         int count;
         byte[] data = new byte[4096];

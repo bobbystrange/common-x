@@ -1,6 +1,13 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.dreamcat.common.util.ObjectUtil;
@@ -11,20 +18,13 @@ import org.dreamcat.common.x.excel.core.IExcelSheet;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelStyle;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * Create by tuke on 2020/8/19
  */
 @Getter
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class DynamicRowSheet implements IExcelSheet {
+
     private final Map<Class, AnnotationRowSheet.MetaCacheLine> metaMap = new HashMap<>();
     private String name;
     private Object scheme;
@@ -69,18 +69,21 @@ public class DynamicRowSheet implements IExcelSheet {
 
     private void checkMetaName(Class clazz) {
         if (ObjectUtil.isEmpty(meta.name)) {
-            throw new IllegalArgumentException("sheet name is empty in " + clazz + ", check its annotations");
+            throw new IllegalArgumentException(
+                    "sheet name is empty in " + clazz + ", check its annotations");
         }
     }
 
     @AllArgsConstructor
     static class MetaCacheLine {
+
         XlsMeta meta;
         List<Integer> indexes;
     }
 
     @Getter
     class Iter extends ExcelUnionContent implements Iterator<IExcelCell>, IExcelCell {
+
         XlsMeta subMeta;
         List<Integer> subIndexes;
 
@@ -201,7 +204,7 @@ public class DynamicRowSheet implements IExcelSheet {
 
         @Override
         public IExcelCell next() {
-            if(!hasNext()) throw new NoSuchElementException();
+            if (!hasNext()) throw new NoSuchElementException();
 
             XlsMeta.Cell cell = meta.cells.get(indexes.get(schemeIndex));
 
@@ -309,7 +312,8 @@ public class DynamicRowSheet implements IExcelSheet {
                 if (cell.serializer == null) {
                     setContent(dynamicArray.get(dynamicArrayIndex).get(dynamicArrayColumnIndex));
                 } else {
-                    setContent(cell.serializer.apply(dynamicArray.get(dynamicArrayIndex).get(dynamicArrayColumnIndex)));
+                    setContent(cell.serializer.apply(dynamicArray.get(dynamicArrayIndex)
+                            .get(dynamicArrayColumnIndex)));
                 }
                 rowIndex = dynamicArrayIndex;
                 columnIndex = offset + dynamicArrayColumnIndex;
@@ -340,7 +344,8 @@ public class DynamicRowSheet implements IExcelSheet {
             if (cell.serializer == null) {
                 setContent(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex));
             } else {
-                setContent(cell.serializer.apply(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex)));
+                setContent(cell.serializer
+                        .apply(vectorArray.get(vectorArrayIndex).get(vectorArrayColumnIndex)));
             }
             rowIndex = vectorArrayIndex;
             columnIndex = offset + vectorArrayColumnIndex;
@@ -380,7 +385,8 @@ public class DynamicRowSheet implements IExcelSheet {
                         int mapSize = map.size();
 
                         if (mapSize == 0) {
-                            throw new IllegalArgumentException("empty map field value in " + scheme.getClass());
+                            throw new IllegalArgumentException(
+                                    "empty map field value in " + scheme.getClass());
                         }
                         dynamic = new ArrayList(map.values());
 
@@ -395,7 +401,8 @@ public class DynamicRowSheet implements IExcelSheet {
                 List array = cast(fieldValue);
                 int arraySize = array.size();
                 if (arraySize == 0) {
-                    throw new IllegalArgumentException("empty list/array field value in " + scheme.getClass());
+                    throw new IllegalArgumentException(
+                            "empty list/array field value in " + scheme.getClass());
                 }
 
                 if (array.get(0) instanceof Map) {
@@ -407,7 +414,8 @@ public class DynamicRowSheet implements IExcelSheet {
                     Map dynamicArrayFirstMap = mapList.get(0);
                     int mapSize = dynamicArrayFirstMap.size();
                     if (mapSize == 0) {
-                        throw new IllegalArgumentException("empty map in list/array field value on " + scheme.getClass());
+                        throw new IllegalArgumentException(
+                                "empty map in list/array field value on " + scheme.getClass());
                     }
 
                     dynamicArray = new ArrayList<>(mapSize);
@@ -432,9 +440,11 @@ public class DynamicRowSheet implements IExcelSheet {
                         fieldValue.getClass(), c -> {
                             XlsMeta newMeta = XlsMeta.parse(c, false);
                             if (newMeta == null) {
-                                throw new IllegalArgumentException("no @XlsSheet annotation on " + c);
+                                throw new IllegalArgumentException(
+                                        "no @XlsSheet annotation on " + c);
                             }
-                            return new AnnotationRowSheet.MetaCacheLine(newMeta, newMeta.getFieldIndexes());
+                            return new AnnotationRowSheet.MetaCacheLine(newMeta,
+                                    newMeta.getFieldIndexes());
                         });
                 subMeta = cacheLine.meta;
                 subIndexes = cacheLine.indexes;
@@ -447,7 +457,8 @@ public class DynamicRowSheet implements IExcelSheet {
             // va
             List rectangle = cast(fieldValue);
             if (rectangle.isEmpty()) {
-                throw new IllegalArgumentException("empty list/array field value in " + scheme.getClass());
+                throw new IllegalArgumentException(
+                        "empty list/array field value in " + scheme.getClass());
             }
             AnnotationRowSheet.MetaCacheLine cacheLine = metaMap.computeIfAbsent(
                     rectangle.get(0).getClass(), c -> {
@@ -455,12 +466,14 @@ public class DynamicRowSheet implements IExcelSheet {
                         if (newMeta == null) {
                             throw new IllegalArgumentException("no @XlsSheet annotation on " + c);
                         }
-                        return new AnnotationRowSheet.MetaCacheLine(newMeta, newMeta.getFieldIndexes());
+                        return new AnnotationRowSheet.MetaCacheLine(newMeta,
+                                newMeta.getFieldIndexes());
                     });
             subMeta = cacheLine.meta;
             subIndexes = cacheLine.indexes;
 
-            vectorArray = (List<List>) rectangle.stream().map(subMeta::getFieldValues).collect(Collectors.toList());
+            vectorArray = (List<List>) rectangle.stream().map(subMeta::getFieldValues)
+                    .collect(Collectors.toList());
             vectorArraySize = vectorArray.size();
             if (vectorArraySize == 0) {
                 throw new IllegalArgumentException("empty size element on " + scheme.getClass());

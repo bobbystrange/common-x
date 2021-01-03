@@ -74,7 +74,8 @@ public interface ICsvWorkbook extends Iterable<Iterable<String>> {
         writeTo(writer, "\t", ICsvWorkbook::escapeTsv);
     }
 
-    default void writeTo(Writer writer, String separator, UnaryOperator<String> escaping) throws IOException {
+    default void writeTo(Writer writer, String separator, UnaryOperator<String> escaping)
+            throws IOException {
         for (Iterable<String> row : this) {
             StringBuilder rowString = new StringBuilder();
             Iterator<String> iterator = row.iterator();

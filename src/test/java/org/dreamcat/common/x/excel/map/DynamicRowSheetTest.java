@@ -1,17 +1,19 @@
 package org.dreamcat.common.x.excel.map;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.dreamcat.common.x.asm.BeanMapUtil;
-import org.dreamcat.common.x.excel.core.ExcelWorkbook;
-import org.junit.Test;
+import static org.dreamcat.common.util.RandomUtil.choose10;
+import static org.dreamcat.common.util.RandomUtil.choose36;
+import static org.dreamcat.common.util.RandomUtil.choose72;
+import static org.dreamcat.common.util.RandomUtil.randi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.dreamcat.common.util.RandomUtil.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dreamcat.common.x.asm.BeanMapUtil;
+import org.dreamcat.common.x.excel.core.ExcelWorkbook;
+import org.junit.Test;
 
 /**
  * Create by tuke on 2020/8/19
@@ -34,6 +36,7 @@ public class DynamicRowSheetTest {
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class DynamicPojo extends XlsMetaTest.Pojo {
+
         private Map<String, String> map;
         private List<Map<String, String>> mapList;
 

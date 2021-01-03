@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Font;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ExcelRichStyle extends ExcelStyle {
+
     private short indent;
     // HSSF uses values from -90 to 90 degrees,
     // whereas XSSF uses values from 0 to 180 degrees

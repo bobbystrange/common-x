@@ -1,21 +1,21 @@
 package org.dreamcat.common.x.asm.copy;
 
+import java.util.function.Supplier;
 import net.sf.cglib.beans.BeanCopier;
-import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.core.Timeit;
 import org.dreamcat.common.function.ThrowableSupplier;
+import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.x.asm.BeanCopierUtil;
 import org.dreamcat.common.x.asm.BeanMapUtil;
 import org.dreamcat.common.x.asm.BeanMapUtilTest;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 
-import java.util.function.Supplier;
-
 /**
  * Create by tuke on 2020/8/12
  */
 public class BeanCopySpeedTest {
+
     BeanCopier copier = BeanCopier.create(
             BeanMapUtilTest.C.class, BeanMapUtilTest.C.class, false);
 

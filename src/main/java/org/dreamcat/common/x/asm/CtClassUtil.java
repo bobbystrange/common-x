@@ -1,5 +1,8 @@
 package org.dreamcat.common.x.asm;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -23,19 +26,16 @@ import javassist.bytecode.annotation.ShortMemberValue;
 import javassist.bytecode.annotation.StringMemberValue;
 import org.dreamcat.common.util.ReflectUtil;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Create by tuke on 2020/5/28
  */
 public final class CtClassUtil {
 
-    private CtClassUtil(){
+    private CtClassUtil() {
     }
 
-    public static CtClass createCtClass(String className, byte[] classBytes) throws NotFoundException {
+    public static CtClass createCtClass(String className, byte[] classBytes)
+            throws NotFoundException {
         ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ByteArrayClassPath(className, classBytes));
         return pool.get(className);
@@ -45,7 +45,8 @@ public final class CtClassUtil {
             ClassFile classFile, String annotationClassName,
             Map<String, Object> annotationMembers) {
         ConstPool constPool = classFile.getConstPool();
-        AnnotationsAttribute attribute = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+        AnnotationsAttribute attribute = new AnnotationsAttribute(constPool,
+                AnnotationsAttribute.visibleTag);
         Annotation annotation = new Annotation(annotationClassName, constPool);
 
         Set<Map.Entry<String, Object>> entrySet = annotationMembers.entrySet();
@@ -109,7 +110,8 @@ public final class CtClassUtil {
                 memberValues[i++] = castToMemberValue(v, constPool);
             }
         } else {
-            throw new IllegalArgumentException("unsupported class " + valueClass.getCanonicalName());
+            throw new IllegalArgumentException(
+                    "unsupported class " + valueClass.getCanonicalName());
         }
         return memberValues;
     }

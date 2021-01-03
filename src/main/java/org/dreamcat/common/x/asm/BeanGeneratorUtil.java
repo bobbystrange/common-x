@@ -1,16 +1,15 @@
 package org.dreamcat.common.x.asm;
 
-import net.sf.cglib.beans.BeanGenerator;
-
 import java.util.Map;
 import java.util.Set;
+import net.sf.cglib.beans.BeanGenerator;
 
 /**
  * Create by tuke on 2019-05-09
  */
 public final class BeanGeneratorUtil {
 
-    private BeanGeneratorUtil(){
+    private BeanGeneratorUtil() {
     }
 
     public static Class<?> generateClass(Map<String, Class<?>> properties) {

@@ -1,5 +1,13 @@
 package org.dreamcat.common.x.compress;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorOutputStream;
@@ -10,15 +18,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipParameters;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 /**
  * Create by tuke on 2020/4/7
  */
@@ -27,7 +26,8 @@ public enum CompressorLevelEnum {
     Gzip(-1, CompressorLevelEnum::newGzipCompressorOutputStream,
             GzipCompressorInputStream::new, CompressorLevelEnum::finishGzipCompressorOutputStream),
     Deflate(-1, CompressorLevelEnum::newDeflateCompressorOutputStream,
-            DeflateCompressorInputStream::new, CompressorLevelEnum::finishDeflateCompressorOutputStream);
+            DeflateCompressorInputStream::new,
+            CompressorLevelEnum::finishDeflateCompressorOutputStream);
 
     private final int defaultLevel;
     private final OutputConstructor outputConstructor;
@@ -49,11 +49,13 @@ public enum CompressorLevelEnum {
         return new DeflateCompressorOutputStream(outs, parameters);
     }
 
-    private static void finishGzipCompressorOutputStream(CompressorOutputStream cos) throws IOException {
+    private static void finishGzipCompressorOutputStream(CompressorOutputStream cos)
+            throws IOException {
         ((GzipCompressorOutputStream) cos).finish();
     }
 
-    private static void finishDeflateCompressorOutputStream(CompressorOutputStream cos) throws IOException {
+    private static void finishDeflateCompressorOutputStream(CompressorOutputStream cos)
+            throws IOException {
         ((DeflateCompressorOutputStream) cos).finish();
     }
 
@@ -139,16 +141,19 @@ public enum CompressorLevelEnum {
 
     @FunctionalInterface
     interface OutputConstructor {
+
         CompressorOutputStream newInstance(OutputStream outs, int level) throws IOException;
     }
 
     @FunctionalInterface
     interface InputConstructor {
+
         CompressorInputStream newInstance(InputStream outs) throws IOException;
     }
 
     @FunctionalInterface
     interface FinishMethod {
+
         void finish(CompressorOutputStream outs) throws IOException;
     }
 }

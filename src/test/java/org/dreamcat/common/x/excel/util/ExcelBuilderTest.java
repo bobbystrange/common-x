@@ -1,5 +1,11 @@
 package org.dreamcat.common.x.excel.util;
 
+import static org.dreamcat.common.util.RandomUtil.rand;
+import static org.dreamcat.common.util.RandomUtil.randi;
+import static org.dreamcat.common.x.excel.util.ExcelBuilder.sheet;
+import static org.dreamcat.common.x.excel.util.ExcelBuilder.term;
+import static org.dreamcat.common.x.excel.util.ExcelBuilder.workbook;
+
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -11,10 +17,6 @@ import org.dreamcat.common.x.excel.core.ExcelWorkbookTest;
 import org.dreamcat.common.x.excel.style.ExcelFont;
 import org.dreamcat.common.x.excel.style.ExcelRichStyle;
 import org.junit.Test;
-
-import static org.dreamcat.common.util.RandomUtil.rand;
-import static org.dreamcat.common.util.RandomUtil.randi;
-import static org.dreamcat.common.x.excel.util.ExcelBuilder.*;
 
 
 /**

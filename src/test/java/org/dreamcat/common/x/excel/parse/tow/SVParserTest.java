@@ -1,5 +1,12 @@
 package org.dreamcat.common.x.excel.parse.tow;
 
+import static org.dreamcat.common.util.RandomUtil.choose36;
+import static org.dreamcat.common.util.RandomUtil.randi;
+import static org.dreamcat.common.x.excel.util.ExcelBuilder.sheet;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,14 +19,6 @@ import org.dreamcat.common.x.excel.core.ExcelWorkbook;
 import org.dreamcat.common.x.excel.map.ExcelMapper;
 import org.dreamcat.common.x.excel.util.ExcelBuilder;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import static org.dreamcat.common.util.RandomUtil.choose36;
-import static org.dreamcat.common.util.RandomUtil.randi;
-import static org.dreamcat.common.x.excel.util.ExcelBuilder.sheet;
 
 /**
  * Create by tuke on 2020/8/19
@@ -94,18 +93,21 @@ public class SVParserTest {
     @EqualsAndHashCode(callSuper = true)
     @ToString(callSuper = true)
     public static class Dancer extends BasicDancer {
+
         private String name;
         private int height;
     }
 
     @Data
     public static class Maid {
+
         private String name;
         private int version;
     }
 
     @Data
     public static class BasicDancer {
+
         private String message;
     }
 

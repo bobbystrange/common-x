@@ -1,10 +1,9 @@
 package org.dreamcat.common.x.excel.core;
 
-import org.dreamcat.common.x.excel.content.ExcelStringContent;
-import org.junit.Test;
-
 import java.io.File;
 import java.util.List;
+import org.dreamcat.common.x.excel.content.ExcelStringContent;
+import org.junit.Test;
 
 /**
  * Create by tuke on 2020/7/21
@@ -51,7 +50,8 @@ public class ExcelWorkbookTest {
 
     @Test
     public void fromExcelWorkbook() throws Exception {
-        ExcelWorkbook<ExcelSheet> book = ExcelWorkbook.from(new File("/Users/tuke/Downloads/book.xlsx"));
+        ExcelWorkbook<ExcelSheet> book = ExcelWorkbook
+                .from(new File("/Users/tuke/Downloads/book.xlsx"));
 
         List<ExcelSheet> sheets = book.getSheets();
         for (ExcelSheet sheet : sheets) {
