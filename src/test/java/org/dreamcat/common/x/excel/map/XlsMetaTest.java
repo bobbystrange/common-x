@@ -1,5 +1,12 @@
 package org.dreamcat.common.x.excel.map;
 
+import static org.dreamcat.common.util.BeanUtil.pretty;
+import static org.dreamcat.common.util.RandomUtil.choose26;
+import static org.dreamcat.common.util.RandomUtil.rand;
+import static org.dreamcat.common.util.RandomUtil.randi;
+
+import java.util.Arrays;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +20,6 @@ import org.dreamcat.common.x.excel.annotation.XlsRichStyle;
 import org.dreamcat.common.x.excel.annotation.XlsSheet;
 import org.dreamcat.common.x.excel.annotation.XlsStyle;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.dreamcat.common.bean.BeanFormatUtil.pretty;
-import static org.dreamcat.common.util.RandomUtil.*;
 
 /**
  * Create by tuke on 2020/7/25

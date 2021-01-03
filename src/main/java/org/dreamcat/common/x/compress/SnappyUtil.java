@@ -15,7 +15,11 @@ import java.io.OutputStream;
 /**
  * Create by tuke on 2020/4/7
  */
-public class SnappyUtil {
+public final class SnappyUtil {
+
+    private SnappyUtil(){
+    }
+
     private static final int DEFAULT_BLOCK_SIZE = SnappyCompressorInputStream.DEFAULT_BLOCK_SIZE;
 
     public static byte[] compress(byte[] data) throws IOException {

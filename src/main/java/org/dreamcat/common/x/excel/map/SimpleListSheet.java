@@ -1,7 +1,8 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.util.NoSuchElementException;
 import lombok.Getter;
-import org.dreamcat.common.bean.BeanUtil;
+import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.x.excel.content.ExcelUnionContent;
 import org.dreamcat.common.x.excel.content.IExcelContent;
 import org.dreamcat.common.x.excel.core.IExcelCell;
@@ -139,6 +140,8 @@ public class SimpleListSheet implements IExcelSheet {
 
         @Override
         public IExcelCell next() {
+            if(!hasNext()) throw new NoSuchElementException();
+
             // in cell case scheme
             if (nextCell != null) {
                 setCellAndMove();

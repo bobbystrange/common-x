@@ -24,13 +24,8 @@ public class CsvMeta {
     }
 
     public Cell computeCell(int index) {
-        Cell cell = cells.get(index);
-        if (cell != null && cell.equals(IGNORED_CELL)) return null;
-
-        if (cell == null) {
-            cell = new Cell();
-            cells.put(index, cell);
-        }
+        Cell cell = cells.computeIfAbsent(index, it -> new Cell());
+        if (cell.equals(IGNORED_CELL)) return null;
         return cell;
     }
 

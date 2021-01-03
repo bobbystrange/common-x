@@ -8,7 +8,10 @@ import java.util.Set;
 /**
  * Create by tuke on 2019-05-09
  */
-public class BeanGeneratorUtil {
+public final class BeanGeneratorUtil {
+
+    private BeanGeneratorUtil(){
+    }
 
     public static Class<?> generateClass(Map<String, Class<?>> properties) {
         return generateClass(properties, null);

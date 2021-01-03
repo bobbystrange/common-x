@@ -30,7 +30,10 @@ import java.util.Set;
 /**
  * Create by tuke on 2020/5/28
  */
-public class CtClassUtil {
+public final class CtClassUtil {
+
+    private CtClassUtil(){
+    }
 
     public static CtClass createCtClass(String className, byte[] classBytes) throws NotFoundException {
         ClassPool pool = ClassPool.getDefault();
@@ -80,31 +83,34 @@ public class CtClassUtil {
             Enum<?> en = (Enum<?>) value;
             return new EnumMemberValue(en.ordinal(), en.ordinal(), constPool);
         } else {
-            Class<?> valueClass = value.getClass();
-            MemberValue[] memberValues;
-            if (valueClass.isArray()) {
-                Object[] a = ReflectUtil.castToArray(value);
-                int len = a.length;
-                memberValues = new MemberValue[len];
-                for (int i = 0; i < len; i++) {
-                    Object v = a[i];
-                    memberValues[i] = castToMemberValue(v, constPool);
-                }
-            } else if (value instanceof Collection) {
-                Collection<?> c = (Collection<?>) value;
-                int len = c.size(), i = 0;
-                memberValues = new MemberValue[len];
-                for (Object v : c) {
-                    memberValues[i++] = castToMemberValue(v, constPool);
-                }
-            } else {
-                throw new IllegalArgumentException("unsupported class " + valueClass.getCanonicalName());
-            }
-
+            MemberValue[] memberValues = castToMemberValues(value, constPool);
             ArrayMemberValue memberValue = new ArrayMemberValue(constPool);
             memberValue.setValue(memberValues);
             return memberValue;
         }
     }
 
+    private static MemberValue[] castToMemberValues(Object value, ConstPool constPool) {
+        Class<?> valueClass = value.getClass();
+        MemberValue[] memberValues;
+        if (valueClass.isArray()) {
+            Object[] a = ReflectUtil.castToArray(value);
+            int len = a.length;
+            memberValues = new MemberValue[len];
+            for (int i = 0; i < len; i++) {
+                Object v = a[i];
+                memberValues[i] = castToMemberValue(v, constPool);
+            }
+        } else if (value instanceof Collection) {
+            Collection<?> c = (Collection<?>) value;
+            int len = c.size(), i = 0;
+            memberValues = new MemberValue[len];
+            for (Object v : c) {
+                memberValues[i++] = castToMemberValue(v, constPool);
+            }
+        } else {
+            throw new IllegalArgumentException("unsupported class " + valueClass.getCanonicalName());
+        }
+        return memberValues;
+    }
 }

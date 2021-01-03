@@ -10,10 +10,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * Create by tuke on 2020/3/3
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class BeanCopierUtil {
+public final class BeanCopierUtil {
+
+    private BeanCopierUtil(){
+    }
 
     // Note that it may cause OOM when coping too many dynamic classes
-    public static final Map<Class, Map<Class, BeanCopier>> CACHE = new ConcurrentHashMap<>();
+    private static Map<Class, Map<Class, BeanCopier>> cache = new ConcurrentHashMap<>();
+
+    public static synchronized void evictCache() {
+        cache.clear();
+        cache = new ConcurrentHashMap<>();
+    }
 
     public static <S> S copy(S source) {
         if (source == null) return null;
@@ -47,7 +55,7 @@ public class BeanCopierUtil {
         Class sourceClass = source.getClass();
         Class targetClass = target.getClass();
 
-        BeanCopier copier = CACHE.computeIfAbsent(sourceClass,
+        BeanCopier copier = cache.computeIfAbsent(sourceClass,
                 it -> new ConcurrentHashMap<>()).computeIfAbsent(targetClass,
                 it -> BeanCopier.create(sourceClass, targetClass, useConverter));
         copier.copy(source, target, BeanCopierUtil::convert);

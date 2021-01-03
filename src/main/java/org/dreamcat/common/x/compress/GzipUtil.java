@@ -17,7 +17,11 @@ import java.io.OutputStream;
 /**
  * Create by tuke on 2020/4/7
  */
-public class GzipUtil {
+public final class GzipUtil {
+
+    private GzipUtil(){
+    }
+
     private static final int bufferSize = 4096;
     private static final int DEFAULT_LEVEL = -1;
 

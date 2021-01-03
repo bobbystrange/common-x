@@ -129,8 +129,4 @@ public enum CompressorEnum {
     interface FinishMethod {
         void finish(CompressorOutputStream outs) throws IOException;
     }
-
-    //private static void finish(CompressorOutputStream cos) throws IOException {
-    //    (()cos).finish();
-    //}
 }

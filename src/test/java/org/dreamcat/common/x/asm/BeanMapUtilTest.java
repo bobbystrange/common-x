@@ -1,21 +1,24 @@
 package org.dreamcat.common.x.asm;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.dreamcat.common.bean.BeanUtil;
-import org.dreamcat.common.core.Timeit;
-import org.dreamcat.common.util.RandomUtil;
-import org.junit.Test;
+import static org.dreamcat.common.util.BeanUtil.pretty;
+import static org.dreamcat.common.util.RandomUtil.choose16;
+import static org.dreamcat.common.util.RandomUtil.choose36;
+import static org.dreamcat.common.util.RandomUtil.choose72;
+import static org.dreamcat.common.util.RandomUtil.rand;
+import static org.dreamcat.common.util.RandomUtil.randi;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.dreamcat.common.bean.BeanFormatUtil.pretty;
-import static org.dreamcat.common.util.RandomUtil.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.dreamcat.common.core.Timeit;
+import org.dreamcat.common.util.BeanUtil;
+import org.dreamcat.common.util.RandomUtil;
+import org.junit.Test;
 
 /**
  * Create by tuke on 2020/8/11

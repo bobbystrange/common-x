@@ -1,7 +1,7 @@
 package org.dreamcat.common.x.asm.copy;
 
 import net.sf.cglib.beans.BeanCopier;
-import org.dreamcat.common.bean.BeanUtil;
+import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.core.Timeit;
 import org.dreamcat.common.function.ThrowableSupplier;
 import org.dreamcat.common.x.asm.BeanCopierUtil;

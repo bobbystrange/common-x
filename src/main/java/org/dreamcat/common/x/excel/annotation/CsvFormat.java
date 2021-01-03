@@ -30,28 +30,28 @@ public @interface CsvFormat {
     class NoneSerializer implements Function<Object, String> {
         @Override
         public String apply(Object o) {
-            throw new IllegalStateException("this method may not be invoked");
+            throw new UnsupportedOperationException();
         }
     }
 
     class NoneDeserializer implements Function<String, Object> {
         @Override
         public Object apply(String o) {
-            throw new IllegalStateException("this method may not be invoked");
+            throw new UnsupportedOperationException();
         }
     }
 
     class NoneTypeSerializer implements Function<Object, String[]> {
         @Override
         public String[] apply(Object o) {
-            throw new IllegalStateException("this method may not be invoked");
+            throw new UnsupportedOperationException();
         }
     }
 
     class NoneTypeDeserializer implements Function<String[], Object> {
         @Override
         public Object apply(String[] o) {
-            throw new IllegalStateException("this method may not be invoked");
+            throw new UnsupportedOperationException();
         }
     }
 }

@@ -14,7 +14,10 @@ import java.util.Map;
  */
 @Slf4j
 @SuppressWarnings({"unchecked"})
-public class BeanMapUtil {
+public final class BeanMapUtil {
+
+    private BeanMapUtil(){
+    }
 
     /**
      * use Getter/Setter or public field
@@ -25,9 +28,7 @@ public class BeanMapUtil {
     public static Map<String, Object> toMap(Object bean) {
         Map<String, Object> map = new HashMap<>();
         BeanMap beanMap = BeanMap.create(bean);
-        beanMap.forEach((k, v) -> {
-            map.put(k.toString(), v);
-        });
+        beanMap.forEach((k, v) -> map.put(k.toString(), v));
         return map;
     }
 

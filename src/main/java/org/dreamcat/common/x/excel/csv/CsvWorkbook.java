@@ -1,6 +1,6 @@
 package org.dreamcat.common.x.excel.csv;
 
-import org.dreamcat.common.bean.BeanUtil;
+import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.io.csv.CsvReader;
 
 import java.io.File;
@@ -36,7 +36,7 @@ public class CsvWorkbook<T> implements ICsvWorkbook {
         return from(new File(filename), clazz);
     }
 
-    public static <T> CsvWorkbook<List<String>> from(File file) throws IOException {
+    public static CsvWorkbook<List<String>> from(File file) throws IOException {
         return from(file, null);
     }
 

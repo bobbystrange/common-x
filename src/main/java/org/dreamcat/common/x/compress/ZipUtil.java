@@ -1,5 +1,12 @@
 package org.dreamcat.common.x.compress;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.Deflater;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -9,19 +16,15 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.zip.Deflater;
-
 /**
  * Create by tuke on 2020/4/7
  */
 @Slf4j
-public class ZipUtil {
+public final class ZipUtil {
+
+    private ZipUtil(){
+    }
+
     private static final int BUFFER_SIZE = 4096;
 
     public static void archive(File srcFile, File destFile) throws IOException {
@@ -81,7 +84,7 @@ public class ZipUtil {
         outs.closeArchiveEntry();
     }
 
-    public static void unarchive(File srcFile, File destFile) throws IOException, ArchiveException {
+    public static void unarchive(File srcFile, File destFile) throws IOException {
         try (ArchiveInputStream ins = new ZipArchiveInputStream(
                 new FileInputStream(srcFile))) {
             unarchive(destFile, ins);

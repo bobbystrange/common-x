@@ -1,6 +1,6 @@
 package org.dreamcat.common.x.excel.benchmark;
 
-import org.dreamcat.common.bean.BeanUtil;
+import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.core.Timeit;
 import org.dreamcat.common.x.excel.callback.FitWidthWriteCallback;
 import org.dreamcat.common.x.excel.core.ExcelCell;
@@ -29,22 +29,16 @@ public class AnnotationListSheetSpeedTest {
     // xmx128m, max 88%
     @Test
     public void testByCopy() throws Exception {
-        Thread.sleep(6_000);
         byCopy(newPojoList(64));
-        Thread.sleep(1000);
         byCopy(newPojoList(1024));
-        Thread.sleep(1000);
         byCopy(newPojoList(4096));
     }
 
     // xmx128m, max 70%
     @Test
     public void testByReuse() throws Exception {
-        Thread.sleep(6_000);
         byReuse(newPojoList(64));
-        Thread.sleep(1000);
         byReuse(newPojoList(1024));
-        Thread.sleep(1000);
         byReuse(newPojoList(4096));
     }
 

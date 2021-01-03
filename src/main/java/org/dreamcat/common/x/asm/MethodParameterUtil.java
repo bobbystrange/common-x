@@ -25,7 +25,10 @@ import java.util.Arrays;
  * Create by tuke on 2018/10/14
  */
 @Slf4j
-public class MethodParameterUtil {
+public final class MethodParameterUtil {
+
+    private MethodParameterUtil(){
+    }
 
     /**
      * require <strong>javac -g:vars<strong/>

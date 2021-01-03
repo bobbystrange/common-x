@@ -16,7 +16,11 @@ import java.io.OutputStream;
 /**
  * Create by tuke on 2020/4/7
  */
-public class BZip2Util {
+public final class BZip2Util {
+
+    private BZip2Util(){
+    }
+
     private static final int bufferSize = 4096;
 
     public static byte[] compress(byte[] data) throws IOException {

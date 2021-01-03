@@ -35,8 +35,7 @@ public class XlsMeta {
     public ExcelStyle defaultStyle;
     public final Map<Integer, Cell> cells;
 
-    // Note that maybe not need volatile here, depends on JMM
-    volatile transient List<Integer> fieldIndexes;
+    List<Integer> fieldIndexes;
 
     public XlsMeta() {
         this.cells = new HashMap<>();
@@ -53,15 +52,11 @@ public class XlsMeta {
         return fieldValues;
     }
 
-    public List<Integer> getFieldIndexes() {
+    public synchronized List<Integer> getFieldIndexes() {
         if (fieldIndexes == null) {
-            synchronized (cells) {
-                if (fieldIndexes == null) {
-                    fieldIndexes = cells.keySet().stream()
-                            .sorted()
-                            .collect(Collectors.toList());
-                }
-            }
+            fieldIndexes = cells.keySet().stream()
+                    .sorted()
+                    .collect(Collectors.toList());
         }
         return fieldIndexes;
     }
@@ -116,9 +111,9 @@ public class XlsMeta {
             Cell cell = parseXlsCell(meta, clazz, field, index, onlyAnnotated, enableExpanded);
             if (cell == null) continue;
 
-            parseXlsFont(meta, cell, field);
-            parseXlsStyle(meta, cell, field);
-            parseXlsFormat(meta, cell, field);
+            parseXlsFont(cell, field);
+            parseXlsStyle(cell, field);
+            parseXlsFormat(cell, field);
             index++;
         }
 
@@ -149,7 +144,7 @@ public class XlsMeta {
         meta.defaultStyle = ExcelStyle.from(xlsStyle, xlsRichStyle);
     }
 
-    private static void parseXlsFont(XlsMeta meta, Cell cell, Field field) {
+    private static void parseXlsFont(Cell cell, Field field) {
         XlsFont xlsFont = field.getDeclaredAnnotation(XlsFont.class);
         if (xlsFont == null) return;
 
@@ -157,7 +152,7 @@ public class XlsMeta {
         cell.setFont(font);
     }
 
-    private static void parseXlsStyle(XlsMeta meta, Cell cell, Field field) {
+    private static void parseXlsStyle(Cell cell, Field field) {
         XlsStyle xlsStyle = field.getDeclaredAnnotation(XlsStyle.class);
         XlsRichStyle xlsRichStyle = field.getDeclaredAnnotation(XlsRichStyle.class);
         if (xlsStyle == null && xlsRichStyle == null) return;
@@ -166,7 +161,7 @@ public class XlsMeta {
         cell.setStyle(style);
     }
 
-    private static void parseXlsFormat(XlsMeta meta, Cell cell, Field field) {
+    private static void parseXlsFormat(Cell cell, Field field) {
         XlsFormat xlsFormat = field.getDeclaredAnnotation(XlsFormat.class);
         if (xlsFormat == null) return;
 

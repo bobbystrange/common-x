@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.dreamcat.common.bean.BeanFormatUtil;
+import org.dreamcat.common.util.BeanUtil;
 import org.dreamcat.common.x.excel.callback.AutoWidthWriteCallback;
 import org.dreamcat.common.x.excel.core.ExcelSheet;
 import org.dreamcat.common.x.excel.core.ExcelWorkbook;
@@ -35,7 +35,7 @@ public class SVParserTest {
         parser.setVectorFirstHeaderName("maid-bm");
         List<SVRow<Dancer, Maid>> rows = parser.readSheetAsValue(
                 book1, 0);
-        rows.forEach(row -> System.out.println(BeanFormatUtil.pretty(row)));
+        rows.forEach(row -> System.out.println(BeanUtil.pretty(row)));
         System.out.println("total " + rows.size());
     }
 

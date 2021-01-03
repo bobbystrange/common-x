@@ -20,7 +20,10 @@ import java.util.stream.Collectors;
 /**
  * Create by tuke on 2020/8/13
  */
-public class ExcelMapper {
+public final class ExcelMapper {
+
+    private ExcelMapper() {
+    }
 
     public static List<List<List<String>>> parseAsString(String filename) throws IOException, InvalidFormatException {
         return ArrayUtil.map(parse(filename), list -> list == null ? null : list.stream()

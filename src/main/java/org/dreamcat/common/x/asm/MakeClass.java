@@ -20,6 +20,7 @@ import java.util.Set;
  * Create by tuke on 2020/5/28
  */
 public class MakeClass {
+
     private final ClassPool pool;
     private final CtClass cc;
 

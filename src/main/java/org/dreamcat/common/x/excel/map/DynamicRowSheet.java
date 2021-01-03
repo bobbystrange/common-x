@@ -1,5 +1,6 @@
 package org.dreamcat.common.x.excel.map;
 
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.dreamcat.common.util.ObjectUtil;
@@ -200,6 +201,8 @@ public class DynamicRowSheet implements IExcelSheet {
 
         @Override
         public IExcelCell next() {
+            if(!hasNext()) throw new NoSuchElementException();
+
             XlsMeta.Cell cell = meta.cells.get(indexes.get(schemeIndex));
 
             if (scalar != null) {
@@ -375,7 +378,7 @@ public class DynamicRowSheet implements IExcelSheet {
                     if (fieldValue instanceof Map) {
                         Map map = (Map) fieldValue;
                         int mapSize = map.size();
-                        ;
+
                         if (mapSize == 0) {
                             throw new IllegalArgumentException("empty map field value in " + scheme.getClass());
                         }
@@ -427,11 +430,11 @@ public class DynamicRowSheet implements IExcelSheet {
             if (isNotListOrArray(fieldValue)) {
                 AnnotationRowSheet.MetaCacheLine cacheLine = metaMap.computeIfAbsent(
                         fieldValue.getClass(), c -> {
-                            XlsMeta meta = XlsMeta.parse(c, false);
-                            if (meta == null) {
+                            XlsMeta newMeta = XlsMeta.parse(c, false);
+                            if (newMeta == null) {
                                 throw new IllegalArgumentException("no @XlsSheet annotation on " + c);
                             }
-                            return new AnnotationRowSheet.MetaCacheLine(meta, meta.getFieldIndexes());
+                            return new AnnotationRowSheet.MetaCacheLine(newMeta, newMeta.getFieldIndexes());
                         });
                 subMeta = cacheLine.meta;
                 subIndexes = cacheLine.indexes;
@@ -448,11 +451,11 @@ public class DynamicRowSheet implements IExcelSheet {
             }
             AnnotationRowSheet.MetaCacheLine cacheLine = metaMap.computeIfAbsent(
                     rectangle.get(0).getClass(), c -> {
-                        XlsMeta meta = XlsMeta.parse(c, false);
-                        if (meta == null) {
+                        XlsMeta newMeta = XlsMeta.parse(c, false);
+                        if (newMeta == null) {
                             throw new IllegalArgumentException("no @XlsSheet annotation on " + c);
                         }
-                        return new AnnotationRowSheet.MetaCacheLine(meta, meta.getFieldIndexes());
+                        return new AnnotationRowSheet.MetaCacheLine(newMeta, newMeta.getFieldIndexes());
                     });
             subMeta = cacheLine.meta;
             subIndexes = cacheLine.indexes;

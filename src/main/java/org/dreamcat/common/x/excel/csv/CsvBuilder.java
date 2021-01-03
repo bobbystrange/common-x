@@ -9,7 +9,10 @@ import java.util.List;
 /**
  * Create by tuke on 2020/8/10
  */
-public class CsvBuilder {
+public final class CsvBuilder {
+
+    private CsvBuilder() {
+    }
 
     public static CsvMeta parse(Class<?> clazz) {
         CsvMeta meta = new CsvMeta();

@@ -1,24 +1,26 @@
 package org.dreamcat.common.x.compress;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.dreamcat.common.util.ObjectUtil;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 /**
  * Create by tuke on 2020/4/7
  */
 @Slf4j
-public class SevenZUtil {
+public final class SevenZUtil {
+
+    private SevenZUtil(){
+    }
+
     private static final int BUFFER_SIZE = 4096;
 
     public static void archive(File srcFile, File destFile) throws IOException {
@@ -78,7 +80,7 @@ public class SevenZUtil {
 
     // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
-    public void unarchive(String srcFile, String destFile) throws IOException, ArchiveException {
+    public void unarchive(String srcFile, String destFile) throws IOException {
         unarchive(new File(srcFile), new File(destFile));
     }
 

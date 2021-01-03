@@ -53,21 +53,6 @@ public class MailSender {
         this.password = password;
     }
 
-    private static Address toAddress(String address) throws AddressException {
-        return new InternetAddress(address);
-    }
-
-    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
-
-    private static Address[] toAddresses(String... addresses) throws AddressException {
-        int length = addresses.length;
-        Address[] a = new Address[length];
-        for (int i = 0; i < length; i++) {
-            a[i] = new InternetAddress(addresses[i]);
-        }
-        return a;
-    }
-
     // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     public Op newOp() {
@@ -157,8 +142,9 @@ public class MailSender {
         }
 
         public Op fileAttachments(Map<String, File> fileAttachments) throws MessagingException {
-            for (String attachmentFileName : fileAttachments.keySet()) {
-                File file = fileAttachments.get(attachmentFileName);
+            for (Map.Entry<String, File> entry : fileAttachments.entrySet()) {
+                String attachmentFileName = entry.getKey();
+                File file = entry.getValue();
                 fileAttachment(attachmentFileName, file);
             }
 
@@ -178,8 +164,9 @@ public class MailSender {
         }
 
         public Op bytesAttachments(Map<String, byte[]> bytesAttachments, String mimeType) throws MessagingException {
-            for (String attachmentFileName : bytesAttachments.keySet()) {
-                byte[] bytes = bytesAttachments.get(attachmentFileName);
+            for (Map.Entry<String, byte[]> entry : bytesAttachments.entrySet()) {
+                String attachmentFileName = entry.getKey();
+                byte[] bytes = entry.getValue();
                 bytesAttachment(attachmentFileName, bytes, mimeType);
             }
 
@@ -206,6 +193,19 @@ public class MailSender {
                 transport.connect(sender.host, sender.username, sender.password);
                 transport.sendMessage(message, message.getAllRecipients());
             }
+        }
+
+        private static Address toAddress(String address) throws AddressException {
+            return new InternetAddress(address);
+        }
+
+        private static Address[] toAddresses(String... addresses) throws AddressException {
+            int length = addresses.length;
+            Address[] a = new Address[length];
+            for (int i = 0; i < length; i++) {
+                a[i] = toAddress(addresses[i]);
+            }
+            return a;
         }
     }
 
