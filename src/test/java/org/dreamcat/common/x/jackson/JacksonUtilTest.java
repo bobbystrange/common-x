@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -23,10 +22,13 @@ import org.junit.Test;
 /**
  * Create by tuke on 2020/2/26
  */
+@SuppressWarnings({"unchecked"})
 public class JacksonUtilTest {
 
     @Test
     public void toTest() {
+        System.out.println(JacksonUtil.toJson(null));
+        System.out.println(JacksonUtil.toJson("Hello World!"));
         Object obj = BeanData.ofPojo();
         System.out.println(pretty(obj));
         String json = JacksonUtil.toJson(obj);
@@ -49,7 +51,10 @@ public class JacksonUtilTest {
     public void fromTest() {
         List<Integer> list = JacksonUtil.fromJsonArray("[1, 2, 3]", Integer.class);
         System.out.println(list);
-        System.out.println(JacksonUtil.fromJsonArray("[{\"a\": 1, \"b\": true}]"));
+        System.out.println(JacksonUtil.fromJsonArray("[{\"a\": 1, \"b\": true}]", Map.class));
+        System.out.println(JacksonUtil.fromJsonObject("{\"a\": 1, \"b\": true}"));
+        System.out.println(
+                (Map<String, Object>) JacksonUtil.fromJson("{\"a\": 1, \"b\": true}", Map.class));
         System.out.println(JacksonUtil.fromJsonArray("[1, 2E2, 3.14]", Double.class));
     }
 
@@ -62,7 +67,7 @@ public class JacksonUtilTest {
 
     @Test
     public void arrayFromTest() throws JsonProcessingException {
-        List<Integer> list1 = JacksonUtil.fromJsonArray("[1.0, 2.0, 3.0]");
+        List<Integer> list1 = JacksonUtil.fromJsonArray("[1.0, 2.0, 3.0]", Integer.class);
         System.out.println(list1);
         try {
             System.out.println(list1.get(0).getClass());
@@ -72,7 +77,7 @@ public class JacksonUtilTest {
 
         String json = "[{\"a\": 1, \"b\": \"\"}]";
 
-        List<VarV> list2 = JacksonUtil.fromJsonArray(json);
+        List<VarV> list2 = JacksonUtil.fromJsonArray(json, VarV.class);
         System.out.println(list2);
         try {
             VarV var1 = list2.get(0);
@@ -89,16 +94,6 @@ public class JacksonUtilTest {
         } catch (ClassCastException e) {
             System.err.println("list3: " + e.getMessage());
         }
-
-        List<VarV> list4 = fromJsonArray(json, VarV.class);
-        System.out.println(list4);
-        try {
-            VarV var1 = list4.get(0);
-            System.out.println("list4: " + list4);
-        } catch (ClassCastException e) {
-            System.err.println("list4: " + e.getMessage());
-        }
-
     }
 
     @Test
@@ -180,15 +175,5 @@ public class JacksonUtilTest {
         @JsonDeserialize(using = LongDeserializer.class)
         @JsonSerialize(using = LongSerializer.class)
         List<Long> a;
-    }
-
-    private static <T> List<T> fromJsonArray(String json, Class<T> clazz) {
-        try {
-            return new ObjectMapper().readValue(
-                    json, new TypeReference<List<T>>() {
-                    });
-        } catch (IOException e) {
-            return null;
-        }
     }
 }

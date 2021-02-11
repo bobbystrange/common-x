@@ -8,6 +8,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * Create by tuke on 2018/10/19
  */
 @Slf4j
+@SuppressWarnings({"unchecked"})
 public final class JacksonUtil {
 
     private JacksonUtil() {
@@ -56,7 +61,7 @@ public final class JacksonUtil {
         }
     }
 
-    /// json
+    // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
     public static <T> T fromJson(String json, Class<T> clazz) {
         try {
@@ -76,35 +81,59 @@ public final class JacksonUtil {
         }
     }
 
-    public static <T> List<T> fromJsonArray(String json) {
+    public static <T> T fromJson(Reader reader, Class<T> clazz) {
         try {
-            return jsonMapper.readValue(json, new TypeReference<List<T>>() {
-            });
+            return jsonMapper.readValue(reader, clazz);
         } catch (IOException e) {
             log.error(e.getMessage());
             return null;
         }
     }
+
+    // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
+
+    public static Map<String, Object> fromJsonObject(String json) {
+        return fromJson(json, HashMap.class);
+    }
+
+    public static Map<String, Object> fromJsonObject(File file) {
+        return fromJson(file, HashMap.class);
+    }
+
+    public static Map<String, Object> fromJsonObject(Reader reader) {
+        return fromJson(reader, HashMap.class);
+    }
+
+    // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
 
     public static <T> List<T> fromJsonArray(String json, Class<T> clazz) {
         try {
-            return jsonMapper.readValue(json, getGenericType(List.class, clazz));
+            return jsonMapper.readValue(json, getGenericType(ArrayList.class, clazz));
         } catch (IOException e) {
             log.error(e.getMessage());
             return null;
         }
     }
 
-    public static <T> List<T> fromJsonArray(File file) {
+    public static <T> List<T> fromJsonArray(File file, Class<T> clazz) {
         try {
-            return jsonMapper.readValue(file,
-                    new TypeReference<List<T>>() {
-                    });
+            return jsonMapper.readValue(file, getGenericType(ArrayList.class, clazz));
         } catch (IOException e) {
             log.error(e.getMessage());
             return null;
         }
     }
+
+    public static <T> List<T> fromJsonArray(Reader reader, Class<T> clazz) {
+        try {
+            return jsonMapper.readValue(reader, getGenericType(ArrayList.class, clazz));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     public static String toJson(Object bean) {
         try {
@@ -115,7 +144,26 @@ public final class JacksonUtil {
         }
     }
 
-    /// yaml
+    public static byte[] toJsonBytes(Object bean) {
+        try {
+            return jsonMapper.writeValueAsBytes(bean);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    public static boolean toJson(Object bean, Writer writer) {
+        try {
+            jsonMapper.writeValue(writer, bean);
+            return true;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     public static <T> T fromYaml(String yaml, Class<T> clazz) {
         try {
@@ -139,6 +187,8 @@ public final class JacksonUtil {
         }
     }
 
+    // ---- ---- ---- ----    ---- ---- ---- ----    ---- ---- ---- ----
+
     public static String toYaml(Object bean) {
         try {
             return yamlMapper.writeValueAsString(bean);
@@ -147,6 +197,8 @@ public final class JacksonUtil {
             return null;
         }
     }
+
+    // ==== ==== ==== ====    ==== ==== ==== ====    ==== ==== ==== ====
 
     /// types
 

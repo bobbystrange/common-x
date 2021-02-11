@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.dreamcat.common.web.data.EnumAttribute;
 import org.junit.Test;
 
 /**
@@ -111,9 +111,14 @@ public class GenericDeserializeTest {
 
     @Getter
     @RequiredArgsConstructor
-    public enum Type implements EnumAttribute<Integer> {
+    public enum Type implements Supplier<Integer> {
         Q(1), W(2), O(3), P(4);
 
         private final Integer value;
+
+        @Override
+        public Integer get() {
+            return value;
+        }
     }
 }

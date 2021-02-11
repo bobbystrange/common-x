@@ -1,8 +1,5 @@
 ext {
     jacksonVersion = "2.11.0"
-    javaMailVersion = "1.6.2"
-    compressVersion = "1.18"
-    poiVersion = "4.0.1"
 }
 
 dependencies {
@@ -11,23 +8,13 @@ dependencies {
     // asm
     implementation 'cglib:cglib:3.3.0'
     implementation "org.javassist:javassist:3.27.0-GA"
-    // MS Office
-    implementation "org.apache.poi:poi:${poiVersion}"
-    implementation "org.apache.poi:poi-ooxml:${poiVersion}"
     // Jackson
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
     // JavaMail
-    implementation "com.sun.mail:javax.mail:$javaMailVersion"
-    // compress
-    implementation "org.apache.commons:commons-compress:$compressVersion"
+    implementation "com.sun.mail:javax.mail:1.6.2"
 
-    // testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
     testImplementation "junit:junit:$junitVersion"
-
-    testImplementation "org.dreamcat:common-web:$VERSION"
     testImplementation 'org.springframework:spring-beans:5.2.3.RELEASE'
-    testImplementation "com.opencsv:opencsv:5.1"
-    testImplementation "com.alibaba:easyexcel:2.2.6"
 }
